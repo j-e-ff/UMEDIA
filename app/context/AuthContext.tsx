@@ -8,7 +8,7 @@ import {
 } from "react";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, documentSnapshotFromJSON, onSnapshot } from "firebase/firestore";
 
 //  created FirestoreUser to save information (mainly username) to database
 //  firebase already saves uid,email,photourl but saving it to firestore can allow
@@ -18,7 +18,16 @@ interface FirestoreUser {
   email: string;
   username: string;
   photoURL: string;
+  photoKey?: string;
   createdAt: Date;
+  bio: string;
+  coverImage: string;
+  coverImageKey?: string;
+  followingUser: string[];
+  followingForum: string[];
+  likedPosts: string[];
+  messaging: string [];
+  messagingUser: string[];
 }
 
 interface AuthContextType {
@@ -54,13 +63,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
           const userRef = doc(db, "users", user.uid);
           // fetching the actual document snapshot from firestore (if exists)
-          const userSnap = await getDoc(userRef);
-
-          if (userSnap.exists()) {
-            setFirestoreUser(userSnap.data() as FirestoreUser);
-          } else {
-            setFirestoreUser(null);
-          }
+          const userSnap = onSnapshot(userRef, (docSnap) => {
+            if (docSnap.exists()) {
+              setFirestoreUser(docSnap.data() as FirestoreUser);
+            } else {
+              setFirestoreUser(null);
+            }
+          });
+          setLoading(false);
+          return () => unsubscribe();
         } catch (error) {
           console.error("Error fetching user data:", error);
           setFirestoreUser(null);
@@ -73,6 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     return () => unsubscribe();
   }, []);
+
   const logout = async () => {
     await signOut(auth);
   };

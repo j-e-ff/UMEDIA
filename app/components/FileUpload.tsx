@@ -1,37 +1,49 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface UploadedFile {
   id: string;
   name: string;
   url: string;
-  fileName?: string; // The actual filename stored in R2
+  fileName?: string; // The actual object key stored in R2
   status: "uploading" | "success" | "error";
   progress: number;
 }
 
 interface FileUploadProps {
   onFilesUploaded?: (files: UploadedFile[]) => void;
+  compact?: boolean;
 }
 
-const FileUpload = ({ onFilesUploaded }: FileUploadProps) => {
+const FileUpload = ({ onFilesUploaded, compact = false }: FileUploadProps) => {
   const [uploading, setUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const lastSuccessfulFilesRef = useRef<UploadedFile[]>([]);
 
   // Notify parent component when files are successfully uploaded
   useEffect(() => {
-    if (
-      !onFilesUploaded ||
-      uploadedFiles.length === 0 || // ✅ avoid firing on first render
-      uploadedFiles.some((file) => file.status === "uploading")
-    ) {
+    if (!onFilesUploaded || uploadedFiles.length === 0) {
       return;
     }
 
+    // Get all successful files
     const successfulFiles = uploadedFiles.filter(
       (file) => file.status === "success"
     );
-    onFilesUploaded(successfulFiles);
+
+    // Only call onFilesUploaded if the successful files have actually changed
+    if (
+      successfulFiles.length > 0 &&
+      JSON.stringify(successfulFiles) !==
+        JSON.stringify(lastSuccessfulFilesRef.current)
+    ) {
+      console.log(
+        "FileUpload: Notifying parent with successful files:",
+        successfulFiles
+      );
+      lastSuccessfulFilesRef.current = successfulFiles;
+      onFilesUploaded(successfulFiles);
+    }
   }, [uploadedFiles, onFilesUploaded]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +65,7 @@ const FileUpload = ({ onFilesUploaded }: FileUploadProps) => {
 
     // Upload each file to R2
     const uploadPromises = files.map(async (file, index) => {
-      const fileId = `${Date.now()}-${index}`;
+      const fileId = initialFiles[index].id; // Use the ID from the initial files array
 
       try {
         // set update progress to 25 (file selected)
@@ -85,7 +97,7 @@ const FileUpload = ({ onFilesUploaded }: FileUploadProps) => {
           body: file,
         });
 
-        if (!uploadRes) throw new Error("Upload Failed");
+        if (!uploadRes.ok) throw new Error("Upload Failed");
         // update progress to 100%
         setUploadedFiles((prev) =>
           prev.map((f) => (f.id === fileId ? { ...f, progress: 100 } : f))
@@ -101,7 +113,7 @@ const FileUpload = ({ onFilesUploaded }: FileUploadProps) => {
         //   fileName
         // )}`;
 
-        // update file status to success
+        // update file status to success and include the object key
         setUploadedFiles((prev) =>
           prev.map((f) =>
             f.id === fileId
@@ -160,16 +172,18 @@ const FileUpload = ({ onFilesUploaded }: FileUploadProps) => {
           onChange={handleFileChange}
           disabled={uploading}
           accept="image/*"
-          multiple
+          multiple={!compact}
         />
-        <p className="text-sm  mt-2">You can select multiple files at once</p>
+        {!compact && (
+          <p className="text-sm  mt-2">You can select multiple files at once</p>
+        )}
       </div>
 
       {uploading && (
         <div className="text-blue-600 mb-4">Uploading files...</div>
       )}
 
-      {uploadedFiles.length > 0 && (
+      {uploadedFiles.length > 0 && !compact && (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Uploaded Files:</h3>
           {uploadedFiles.map((file) => (

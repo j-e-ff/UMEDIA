@@ -23,7 +23,7 @@ const DisplayPost = () => {
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const q = query(collection(db, "posts"), orderBy("createdAt", 'desc'));
+        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
         const postsList: Post[] = querySnapshot.docs.map((doc) => ({
           ...(doc.data() as Post),
@@ -39,7 +39,7 @@ const DisplayPost = () => {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-64 sm:p-20 w-full gap-10">
+      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 sm:p-20 w-full gap-10">
         {posts.map((post) => (
           <PostCard key={post.postId} post={post} />
         ))}

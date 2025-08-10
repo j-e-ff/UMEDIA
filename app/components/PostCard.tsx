@@ -29,21 +29,21 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <div>
-      <div className="min-w-190 h-full bg-base-200 shadow-xl overflow-hidden rounded-xl">
+      <div className="h-full bg-base-200 shadow-xl overflow-hidden rounded-xl">
         <div className="card-body h-24 overflow-y-auto">
           <h2 className="card-title">
             @{post.userName}: {post.title}
           </h2>
         </div>
         {post.photoUrls.length > 0 && (
-          <figure className="px-6 pb-4 flex flex-col items-center">
-            <div className="w-200 h-130 relative flex items-center justify-center">
+          <figure className="px-6 pb-4 flex flex-col items-center ">
+            <div className=" h-130 flex items-center justify-center">
               {/* Image with smooth transition */}
               <img
                 key={currentImageIndex} // re-trigger transition on index change
                 src={post.photoUrls[currentImageIndex]}
                 alt={`Image ${currentImageIndex + 1}`}
-                className="w-full h-full object-contain rounded-lg transition-all duration-1000 ease-in-out"
+                className="w-180 h-full object-contain rounded-lg "
               />
             </div>
             <div className="flex justify-center mt-4 gap-8">

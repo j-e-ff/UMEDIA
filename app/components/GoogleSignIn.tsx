@@ -13,13 +13,19 @@ import {
 } from "firebase/firestore";
 
 const GoogleSignIn = () => {
-  const { user, firestoreUser, setFirestoreUser, loading, isAuthenticated, logout } = useAuth();
+  const {
+    user,
+    firestoreUser,
+    setFirestoreUser,
+    loading,
+    isAuthenticated,
+    logout,
+  } = useAuth();
 
   const handleLogIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const { uid, email } = result.user;
-
       const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
 
@@ -33,7 +39,7 @@ const GoogleSignIn = () => {
             alert("username is required.");
             return;
           }
-          username=username.toLowerCase();
+          username = username.toLowerCase();
 
           // Check for uniqueness
           const q = query(
@@ -55,7 +61,11 @@ const GoogleSignIn = () => {
           email,
           username,
           photoURL,
+          photoKey: "", // placeholder until user uploads a custom avatar
           createdAt: new Date(),
+          bio: "",
+          coverImage: "",
+          coverImageKey: "",
         });
         // set and update context (refresh to display name)
         const newUserSnap = await getDoc(userRef);
@@ -94,7 +104,7 @@ const GoogleSignIn = () => {
               </div>
             </div>
             <div>
-              <p className="car-title text-xs">{firestoreUser?.username}</p>
+              <p className="card-title text-xs">{firestoreUser?.username}</p>
             </div>
           </div>
           <ul

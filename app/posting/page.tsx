@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import FileUpload from "../components/FileUpload";
@@ -12,10 +12,6 @@ import {
   setDoc,
   getDoc,
   collection,
-  orderBy,
-  query,
-  startAt,
-  endAt,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -71,14 +67,14 @@ const Posting = () => {
   }, [user]);
 
   // handle file uploads from FileUpload component
-  const handleFilesUploaded = (files: any[]) => {
+  const handleFilesUploaded = useCallback((files: any[]) => {
     setUploadedFiles(files);
     //extract urls from uploaded files
     const urls = files
       .filter((file) => file.status === "success")
       .map((file) => file.url);
     setPhotoUrls(urls);
-  };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +88,7 @@ const Posting = () => {
       alert("please enter a title");
       return;
     }
-
+    
     if (!comments.trim()) {
       alert("please enter some comment");
       return;
@@ -203,7 +199,7 @@ const Posting = () => {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-64 sm:p-20 w-full">
+      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 ml-64 sm:p-20 w-full">
         <div className="w-full max-w-4xl">
           <h1 className="text-3xl font-bold mb-8 text-center">
             Create a new post

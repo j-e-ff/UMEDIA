@@ -19,7 +19,12 @@ interface User {
   photoURL: string;
 }
 
-const UserPage = () => {
+interface UserPageProps{
+  userName:string;
+}
+
+
+const UserPage: React.FC<UserPageProps> = ({ userName }) => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -28,8 +33,8 @@ const UserPage = () => {
         const q = query(
           collection(db, "users"),
           orderBy("username"),
-          startAt("jef"),
-          endAt("jef\uf8ff")
+          startAt(userName),
+          endAt(userName + "\uf8ff")
         );
         const querySnapshot = await getDocs(q);
         const usersList = querySnapshot.docs.map((doc) => ({
@@ -42,12 +47,12 @@ const UserPage = () => {
       }
     };
     fetchAllUsers();
-  }, []);
+  }, [userName]);
   return (
+    
     <div className="flex flex-row">
       <Navbar />
-      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 ml-64 sm:p-20 w-full">
-        <h1 className="text-5xl text-white pb-8">Users</h1>
+      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 w-full">
         <ul className="list w-120 bg-base-100 rounded-box shadow-md">
           <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
             List of all users
