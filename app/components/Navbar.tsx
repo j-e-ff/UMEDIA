@@ -4,21 +4,60 @@ import GoogleSignIn from "./GoogleSignIn";
 
 const Navbar = () => {
   return (
-    <div className="w-64 fixed h-full ">
+    <div>
       {/* Permanent Sidebar */}
-      <nav className="fixed top-0 left-0 h-screen w-55 bg-base-200 text-base-content p-4 shadow flex flex-col justify-between">
-        <ul className="menu space-y-3 text-xl">
+      <nav className="fixed top-0 left-0 h-screen lg:w-20 xl:w-55 xs:w-20 bg-base-300 text-base-content shadow flex flex-col justify-between">
+        <ul className="menu space-y-3 text-xl pt-4 ">
           <li>
-            <a href="/">UMEDIA</a>
+            <a href="/" className="w-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                className="bi bi-house w-14"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+              </svg>
+            </a>
           </li>
           <li>
-            <a href="/search">Search</a>
+            <a href="/search" className="md:text-2xl sm:text-sm w-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                className="bi bi-search w-14"
+                viewBox="0 0 24 24"
+              >
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+              </svg>
+            </a>
           </li>
           <li>
-            <a href="/messages">Messages</a>
+            <a href="/messages" className="md:text-2xl sm:text-sm w-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                className="bi bi-send w-14"
+                viewBox="0 0 24 24"
+              >
+                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+              </svg>
+            </a>
           </li>
           <li>
-            <a href="/posting">Post</a>
+            <a href="/posting" className="md:text-2xl sm:text-sm w-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                className="bi bi-plus-lg w-14"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+                />
+              </svg>
+            </a>
           </li>
         </ul>
         <GoogleSignIn />

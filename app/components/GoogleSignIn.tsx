@@ -83,13 +83,13 @@ const GoogleSignIn = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="bg-none pl-2 pb-2">
       {isAuthenticated ? (
         <div className="dropdown dropdown-top">
           <div
             tabIndex={0}
             role="button"
-            className="card w-48 bg-base-100 shadow flex flex-row items-center gap-4 p-2 cursor-pointer"
+            className="card md:w-48 sm:w-16 shadow flex flex-row items-center gap-4 p-2 cursor-pointer rounded-full bg-primary"
           >
             <div className="avatar">
               <div className="w-12 rounded-full">
@@ -109,10 +109,10 @@ const GoogleSignIn = () => {
           </div>
           <ul
             tabIndex={0}
-            className="menu dropdown-content menu-sm z-10 mt-3 w-45 rounder-box bg-base-100 p-2 shadow"
+            className="menu dropdown-content menu-sm z-10 mt-3 w-45 rounder-box  p-2 shadow"
           >
             <li>
-              <a href="/profile">Profile</a>
+              <a href={`/profile/${firestoreUser?.uid}`}>Profile</a>
             </li>
             <li onClick={handleLogout}>
               <a>Logout</a>
@@ -122,7 +122,7 @@ const GoogleSignIn = () => {
       ) : (
         <button
           onClick={handleLogIn}
-          className="btn bg-white  text-black border-[#e5e5e5] text-xs"
+          className="btn text-xs bg-secondary rounded-full"
         >
           <svg
             aria-label="Google logo"

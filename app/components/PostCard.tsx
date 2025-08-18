@@ -29,7 +29,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <div>
-      <div className="h-full bg-base-200 shadow-xl overflow-hidden rounded-xl">
+      <div className="h-full bg-base-300 shadow-xl overflow-hidden rounded-xl">
         <div className="card-body h-24 overflow-y-auto">
           <h2 className="card-title">
             @{post.userName}: {post.title}
@@ -51,7 +51,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 onClick={handlePrev}
                 disabled={currentImageIndex === 0 ? true : false}
                 hidden={post.photoUrls.length === 1}
-                className="btn bt-sm btn-dash rounded-2xl btn-secondary"
+                className="btn bt-sm  rounded-2xl btn-secondary"
               >
                 prev
               </button>
@@ -64,7 +64,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   currentImageIndex === post.photoUrls.length - 1 ? true : false
                 }
                 hidden={post.photoUrls.length === 1}
-                className="btn bt-sm btn-dash rounded-2xl btn-secondary"
+                className="btn bt-sm rounded-2xl btn-secondary"
               >
                 next
               </button>

@@ -23,11 +23,6 @@ interface FirestoreUser {
   bio: string;
   coverImage: string;
   coverImageKey?: string;
-  followingUser: string[];
-  followingForum: string[];
-  likedPosts: string[];
-  messaging: string [];
-  messagingUser: string[];
 }
 
 interface AuthContextType {

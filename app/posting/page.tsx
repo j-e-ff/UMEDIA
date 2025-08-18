@@ -88,7 +88,7 @@ const Posting = () => {
       alert("please enter a title");
       return;
     }
-    
+
     if (!comments.trim()) {
       alert("please enter some comment");
       return;
@@ -199,7 +199,7 @@ const Posting = () => {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 ml-64 sm:p-20 w-full">
+      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 xl:ml-64 lg:ml-20 md:ml-60 sm:ml-20 xs:ml-10 sm:p-20 w-full">
         <div className="w-full max-w-4xl">
           <h1 className="text-3xl font-bold mb-8 text-center">
             Create a new post
@@ -215,7 +215,7 @@ const Posting = () => {
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="input input-primary w-full"
+                className="input input-secondary w-full"
                 placeholder="Enter you post title"
                 required
               />
@@ -233,7 +233,7 @@ const Posting = () => {
                 id="forum"
                 value={forumId}
                 onChange={(e) => setForumId(e.target.value)}
-                className="select select-primary w-full"
+                className="select select-secondary w-full"
                 required
               >
                 <option value="general">General Discussion</option>
@@ -252,7 +252,7 @@ const Posting = () => {
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder="comment section"
-                className="textarea textarea-primary w-full"
+                className="textarea textarea-secondary w-full"
                 required
               ></textarea>
             </div>
@@ -267,11 +267,11 @@ const Posting = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="btn btn-primary"
+                className="btn btn-accent"
               >
                 {isSubmitting ? (
                   <>
-                    <span className="loading loading-spinner loading-sm text-primary">
+                    <span className="loading loading-spinner loading-sm text-secondary">
                       Creating post
                     </span>
                   </>

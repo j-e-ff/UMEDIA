@@ -165,17 +165,17 @@ const FileUpload = ({ onFilesUploaded, compact = false }: FileUploadProps) => {
 
   return (
     <div className="">
-      <div className="mb-4 p-4" data-theme="business">
+      <div className="mb-4 p-4 ">
         <input
           type="file"
-          className="file-input file-input-primary w-full "
+          className="file-input file-input-secondary w-full "
           onChange={handleFileChange}
           disabled={uploading}
           accept="image/*"
           multiple={!compact}
         />
         {!compact && (
-          <p className="text-sm  mt-2">You can select multiple files at once</p>
+          <p className="text-sm mt-2">You can select multiple files at once</p>
         )}
       </div>
 
