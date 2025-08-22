@@ -89,7 +89,7 @@ const GoogleSignIn = () => {
           <div
             tabIndex={0}
             role="button"
-            className="card md:w-48 sm:w-16 shadow flex flex-row items-center gap-4 p-2 cursor-pointer rounded-full bg-primary"
+            className="card sm:w-16 md:w-16 lg:w-16 xl:w-50 shadow flex flex-row items-center gap-4 p-2 cursor-pointer rounded-full bg-primary "
           >
             <div className="avatar">
               <div className="w-12 rounded-full">
@@ -104,7 +104,7 @@ const GoogleSignIn = () => {
               </div>
             </div>
             <div>
-              <p className="card-title text-xs">{firestoreUser?.username}</p>
+              <p className="card-title text-xs hidden xl:inline">{firestoreUser?.username}</p>
             </div>
           </div>
           <ul

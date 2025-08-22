@@ -187,7 +187,7 @@ const MessagesPage = () => {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className="font-sans flex flex-row h-screen ml-55 pt-12 pl-12 w-full gap-4 overflow-hidden">
+      <div className="font-sans flex flex-row h-screen pt-12 pl-12 w-full gap-4 overflow-hidden xl:ml-64 ml-20">
         <div className="w-100 flex flex-col gap-4">
           <p className="text-4xl text-center">Messages</p>
           <label className="input input-primary">
@@ -272,7 +272,7 @@ const MessagesPage = () => {
         <div className="w-full">
           {user && (
             <div>
-              <div className="flex flex-row gap-4">
+              <div className="flex flex-row gap-4 items-center">
                 <img
                   className="size-16 object-contain rounded-box"
                   src={user.photoURL}

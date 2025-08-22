@@ -6,13 +6,17 @@ import FileUpload from "../components/FileUpload";
 import { useAuth } from "../context/AuthContext";
 import { auth, googleProvider, db } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
+import { useFollowingForums } from "../hooks/useFollowingForums"
 import {
-  doc,
   addDoc,
-  setDoc,
-  getDoc,
   collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
   serverTimestamp,
+  orderBy,
 } from "firebase/firestore";
 
 interface Post {
@@ -35,8 +39,26 @@ interface User {
   photoURL: string;
 }
 
+// interface userd to store Forums and add to the firestore DB 
+interface Forums {
+  name: string;
+  description: string;
+  createdAt: any;
+  createdBy: string;
+  coverImage: string;
+  forumImage: string;
+}
+
+// interface user only for fetching forums user follows
+interface FollowingForum {
+  forumId: string;
+  forumName: string;
+  followedAt: any;
+}
+
 const Posting = () => {
   const { user, firestoreUser, loading, isAuthenticated } = useAuth();
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [title, setTitle] = useState("");
   const [comments, setComments] = useState("");
@@ -44,7 +66,16 @@ const Posting = () => {
   const [forumId, setForumId] = useState("general");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
-  const router = useRouter();
+
+  const [forumToggle, setForumToggle] = useState(false);
+  const [forumName, setForumName] = useState("");
+  const [forumDesc, setForumDesc] = useState("");
+  const [forumCoverImage, setForumCoverImage] = useState("");
+  const [forumImage, setForumImage] = useState("");
+  const followingForums = useFollowingForums();
+
+  // DELETE FORUMS LIST AFTER COMPARING WITH USEFOLLOWINGFORUMS HOOK
+  const [forumsList, setForumsList] = useState<FollowingForum[]>([]);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -66,15 +97,109 @@ const Posting = () => {
     fetchAllUsers();
   }, [user]);
 
+  // useEffect for fetching followingForums
+  useEffect(() => {
+    const fetchFollowingForums = async () => {
+      if (!firestoreUser) return;
+      try {
+        const followingForumsColelctionRef = collection(
+          db,
+          "users",
+          firestoreUser.uid,
+          "followingForum"
+        );
+
+        const querySnapshot = await getDocs(followingForumsColelctionRef);
+
+        //explicitly map the fields into the FollowingForum interface
+        const followingForums: FollowingForum[] = querySnapshot.docs.map(
+          (doc) => {
+            const data = doc.data();
+            return {
+              forumId: doc.id,
+              forumName: data.forumName,
+              followedAt: data.followedAt,
+            };
+          }
+        );
+        setForumsList(followingForums);
+        console.log("followingForums", followingForums);
+        console.log("forumsList", forumsList);
+      } catch (error) {
+        console.error("Failed to fetch following forums", error);
+      }
+    };
+    fetchFollowingForums();
+  }, [firestoreUser]);
+
   // handle file uploads from FileUpload component
-  const handleFilesUploaded = useCallback((files: any[]) => {
-    setUploadedFiles(files);
+  const handleFilesUploaded = useCallback(
+    (files: any[]) => {
+      //extract urls from uploaded files
+      const urls = files
+        .filter((file) => file.status === "success")
+        .map((file) => file.url);
+      {
+        forumToggle ? setForumCoverImage(urls[0]) : setPhotoUrls(urls);
+      }
+    },
+    [forumToggle]
+  );
+
+  const handleForumImageUploaded = useCallback((files: any[]) => {
     //extract urls from uploaded files
     const urls = files
       .filter((file) => file.status === "success")
       .map((file) => file.url);
-    setPhotoUrls(urls);
+    setForumImage(urls[0]);
   }, []);
+
+  const handleForumSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forumName.trim()) {
+      alert("please enter a name for your forum");
+      return;
+    }
+    if (!forumDesc.trim()) {
+      alert("please enter a description for your forum");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      //create forum document
+      const forumData: Forums = {
+        name: forumName,
+        description: forumDesc,
+        createdAt: serverTimestamp(),
+        createdBy: firestoreUser!.uid,
+        coverImage: forumCoverImage,
+        forumImage: forumImage,
+      };
+
+      const docRef = await addDoc(collection(db, "forums"), {
+        ...forumData,
+        createdBy: firestoreUser!.uid, // or firestoreUser!.uid
+        createdAt: serverTimestamp(),
+      });
+
+      // update the forum with its ID
+      await setDoc(
+        doc(db, "forums", docRef.id),
+        {
+          ...forumData,
+          forumId: docRef.id,
+        },
+        { merge: true }
+      );
+    } catch (error) {
+      console.error("Error creating forum:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+    setForumCoverImage("");
+    setForumDesc("");
+    setForumName("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,85 +327,206 @@ const Posting = () => {
       <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 xl:ml-64 lg:ml-20 md:ml-60 sm:ml-20 xs:ml-10 sm:p-20 w-full">
         <div className="w-full max-w-4xl">
           <h1 className="text-3xl font-bold mb-8 text-center">
-            Create a new post
+            Create a new {forumToggle ? "forum" : "post"}
           </h1>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Title Input */}
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium mb-2">
-                Title *
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="input input-secondary w-full"
-                placeholder="Enter you post title"
-                required
-              />
-            </div>
 
-            {/* forum selection */}
-            <div>
-              <label
-                htmlFor="forum"
-                className="block text-sm font-medium  mb-2"
-              >
-                Forum *
-              </label>
-              <select
-                id="forum"
-                value={forumId}
-                onChange={(e) => setForumId(e.target.value)}
-                className="select select-secondary w-full"
-                required
-              >
-                <option value="general">General Discussion</option>
-              </select>
-            </div>
-            {/* content input */}
-            <div>
-              <label
-                htmlFor="comments"
-                className="block text-sm font-medium  mb-2"
-              >
-                Content *
-              </label>
-              <textarea
-                id="comments"
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-                placeholder="comment section"
-                className="textarea textarea-secondary w-full"
-                required
-              ></textarea>
-            </div>
-            <div>
-              <label className="block text-sm font-medium  mb-2">
-                Images (optional)
-              </label>
-              <FileUpload onFilesUploaded={handleFilesUploaded} />
-            </div>
-            {/* submit button */}
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn btn-accent"
-              >
-                {isSubmitting ? (
-                  <>
-                    <span className="loading loading-spinner loading-sm text-secondary">
-                      Creating post
-                    </span>
-                  </>
-                ) : (
-                  "create post"
-                )}
-              </button>
-            </div>
-          </form>
+          <div className="join join-horizontal flex justify-center">
+            <button
+              className={`btn join-item ${
+                forumToggle == false
+                  ? "bg-primary text-primary-content "
+                  : "bg-none "
+              }`}
+              aria-label="Users"
+              value="Users"
+              onClick={() => setForumToggle(false)}
+            >
+              Users
+            </button>
+            <button
+              className={`btn join-item ${
+                forumToggle == true
+                  ? "bg-primary text-primary-content"
+                  : "bg-none"
+              }`}
+              aria-label="Forums"
+              value="Forums"
+              onClick={() => (
+                setForumToggle(true), console.log("forumToggle", forumToggle)
+              )}
+            >
+              Forums
+            </button>
+          </div>
+          {!forumToggle && (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Title Input */}
+              <div>
+                <label
+                  htmlFor="title"
+                  className="block text-md font-medium mb-2"
+                >
+                  Title *
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="input input-secondary w-full"
+                  placeholder="Enter you post title"
+                  required
+                />
+              </div>
+
+              {/* forum selection */}
+              <div>
+                <label
+                  htmlFor="forum"
+                  className="block text-md font-medium  mb-2"
+                >
+                  Forum *
+                </label>
+                <select
+                  id="forum"
+                  value={forumId}
+                  onChange={(e) => setForumId(e.target.value)}
+                  className="select select-secondary w-full"
+                  required
+                >
+                  <option value="general">General Discussion</option>
+                  {followingForums.map((forum) => {
+                    return (
+                      <option key={forum.forumId} value={forum.forumId}>
+                        {forum.forumName}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              {/* content input */}
+              <div>
+                <label
+                  htmlFor="comments"
+                  className="block text-md font-medium  mb-2"
+                >
+                  Content *
+                </label>
+                <textarea
+                  id="comments"
+                  value={comments}
+                  onChange={(e) => setComments(e.target.value)}
+                  placeholder="comment section"
+                  className="textarea textarea-secondary w-full"
+                  required
+                ></textarea>
+              </div>
+              <div>
+                <label className="block text-md font-medium  mb-2">
+                  Images (optional)
+                </label>
+                <FileUpload onFilesUploaded={handleFilesUploaded} />
+              </div>
+              {/* submit button */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn btn-accent"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm text-secondary">
+                        creating post
+                      </span>
+                    </>
+                  ) : (
+                    "create post"
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+          {forumToggle && (
+            <form onSubmit={handleForumSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="Name"
+                  className="block text-md font-medium mb-2"
+                >
+                  Name *
+                </label>
+                <input
+                  type="text"
+                  id="Name"
+                  value={forumName}
+                  onChange={(e) => setForumName(e.target.value)}
+                  className="input input-secondary w-full"
+                  placeholder="Enter forum name"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="Description"
+                  className="block text-md font-medium mb-2"
+                >
+                  Description *
+                </label>
+                <input
+                  type="text"
+                  id="Description"
+                  value={forumDesc}
+                  onChange={(e) => setForumDesc(e.target.value)}
+                  className="input input-secondary w-full"
+                  placeholder="Enter forum description"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="Cover Image"
+                  className="block text-md font-medium mb-2"
+                >
+                  Cover Image *
+                </label>
+                <FileUpload
+                  onFilesUploaded={handleFilesUploaded}
+                  compact={true}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="Avatar"
+                  className="block text-md font-medium mb-2"
+                >
+                  Avatar *
+                </label>
+                <FileUpload
+                  onFilesUploaded={handleForumImageUploaded}
+                  compact={true}
+                />
+              </div>
+              {/* submit button */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn btn-accent"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm text-secondary">
+                        creating forum
+                      </span>
+                    </>
+                  ) : (
+                    "create Forum"
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>

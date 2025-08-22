@@ -165,7 +165,7 @@ const FileUpload = ({ onFilesUploaded, compact = false }: FileUploadProps) => {
 
   return (
     <div className="">
-      <div className="mb-4 p-4 ">
+      <div className="mb-4 ">
         <input
           type="file"
           className="file-input file-input-secondary w-full "
