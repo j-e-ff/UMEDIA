@@ -13,9 +13,14 @@ interface UploadedFile {
 interface FileUploadProps {
   onFilesUploaded?: (files: UploadedFile[]) => void;
   compact?: boolean;
+  required?: boolean;
 }
 
-const FileUpload = ({ onFilesUploaded, compact = false }: FileUploadProps) => {
+const FileUpload = ({
+  onFilesUploaded,
+  compact = false,
+  required = false,
+}: FileUploadProps) => {
   const [uploading, setUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const lastSuccessfulFilesRef = useRef<UploadedFile[]>([]);
@@ -173,6 +178,7 @@ const FileUpload = ({ onFilesUploaded, compact = false }: FileUploadProps) => {
           disabled={uploading}
           accept="image/*"
           multiple={!compact}
+          required={required}
         />
         {!compact && (
           <p className="text-sm mt-2">You can select multiple files at once</p>

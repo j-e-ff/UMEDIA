@@ -193,7 +193,7 @@ const SearchPage = () => {
                       </div>
                     </a>
 
-                    {firestoreUser?.uid !== user.id && isAuthenticated && (
+                    {isAuthenticated && firestoreUser?.uid !== user.id && (
                       <button
                         onClick={() =>
                           following.includes(user.id)

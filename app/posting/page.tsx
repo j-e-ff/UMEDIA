@@ -493,6 +493,7 @@ const Posting = () => {
                 <FileUpload
                   onFilesUploaded={handleFilesUploaded}
                   compact={true}
+                  required={true}
                 />
               </div>
               <div>
@@ -505,6 +506,7 @@ const Posting = () => {
                 <FileUpload
                   onFilesUploaded={handleForumImageUploaded}
                   compact={true}
+                  required={true}
                 />
               </div>
               {/* submit button */}
