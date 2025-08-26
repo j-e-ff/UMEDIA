@@ -6,17 +6,15 @@ import FileUpload from "../components/FileUpload";
 import { useAuth } from "../context/AuthContext";
 import { auth, googleProvider, db } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
-import { useFollowingForums } from "../hooks/useFollowingForums"
+import { useFollowingForums } from "../hooks/useFollowingForums";
 import {
   addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
-  query,
   setDoc,
   serverTimestamp,
-  orderBy,
 } from "firebase/firestore";
 
 interface Post {
@@ -39,7 +37,7 @@ interface User {
   photoURL: string;
 }
 
-// interface userd to store Forums and add to the firestore DB 
+// interface userd to store Forums and add to the firestore DB
 interface Forums {
   name: string;
   description: string;

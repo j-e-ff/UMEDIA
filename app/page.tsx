@@ -1,8 +1,6 @@
-import Link from "next/link";
+"use client"
 import Navbar from "./components/Navbar";
-import DisplayPost from "./components/DisplayPost";
-import { useFollowingForums } from "./hooks/useFollowingForums";
-
+import HomePage from "./home/HomePage";
 
 export default function Home() {
   return (
@@ -10,7 +8,7 @@ export default function Home() {
       <Navbar />
       <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen ml-20 lg:ml-20  sm:ml-20 sm:p-20 w-full">
         <h1>HOMEPAGE</h1>
-        <DisplayPost forumId="general" />
+        <HomePage/>
       </div>
     </div>
   );

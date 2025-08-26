@@ -154,7 +154,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
                   )}
                 </div>
                 <div>{forum.description}</div>
-                <DisplayPost forumId={forum.forumId} />
+                <DisplayPost forumId={[forum.forumId]} location="forum" />
               </div>
             </div>
           </div>
