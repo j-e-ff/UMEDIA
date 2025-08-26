@@ -104,12 +104,12 @@ const GoogleSignIn = () => {
               </div>
             </div>
             <div>
-              <p className="card-title text-xs hidden xl:inline">{firestoreUser?.username}</p>
+              <p className="card-title text-xs hidden xl:inline text-primary-content">{firestoreUser?.username}</p>
             </div>
           </div>
           <ul
             tabIndex={0}
-            className="menu dropdown-content menu-sm z-10 mt-3 w-45 rounder-box  p-2 shadow"
+            className="menu dropdown-content menu-sm z-10 mt-3 w-45 rounded-2xl  p-2 shadow bg-primary text-primary-content"
           >
             <li>
               <a href={`/profile/${firestoreUser?.uid}`}>Profile</a>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import PostCard from "./PostCard";
+import { useFollowingForums } from "../hooks/useFollowingForums";
 
 interface Post {
   comments: string;
@@ -17,21 +18,19 @@ interface Post {
 }
 
 interface DisplayPostProps {
-  forumId: string;
+  forumIds: string [];
 }
 
-const DisplayPost = ({ forumId }: DisplayPostProps) => {
+const DisplayFollowingPosts = ({ forumIds }: DisplayPostProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [displayType, setDisplayType] = useState<"general" | "forums">(
-    "general"
-  );
+ 
 
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
         const q = query(
           collection(db, "posts"),
-          where("forumId", "==", forumId),
+          where("forumId", "in", forumIds),
           orderBy("createdAt", "desc")
         );
 
@@ -52,32 +51,6 @@ const DisplayPost = ({ forumId }: DisplayPostProps) => {
   return (
     <div className="flex flex-row">
       <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 sm:p-20 w-full gap-10">
-        <div className="join join-horizontal">
-          <button
-            className={`btn join-item ${
-              displayType === "general"
-                ? "bg-primary text-primary-content"
-                : "bg-none"
-            }`}
-            aria-label="Users"
-            value="users"
-            onClick={() => setDisplayType("general")}
-          >
-            Users
-          </button>
-          <button
-            className={`btn join-item ${
-              displayType === "forums"
-                ? "bg-primary text-primary-content"
-                : "bg-none"
-            }`}
-            aria-label="Forums"
-            value="forums"
-            onClick={() => setDisplayType("forums")}
-          >
-            Forums
-          </button>
-        </div>
         {posts.map((post) => (
           <PostCard key={post.postId} post={post} />
         ))}
@@ -86,4 +59,4 @@ const DisplayPost = ({ forumId }: DisplayPostProps) => {
   );
 };
 
-export default DisplayPost;
+export default DisplayFollowingPosts;

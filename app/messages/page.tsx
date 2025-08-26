@@ -56,7 +56,7 @@ const MessagesPage = () => {
 
   useEffect(() => {
     scrollToBottom();
-  },[messages])
+  }, [messages]);
 
   const scrollToBottom = () => {
     const messagesContainer = messageEndRef.current?.parentElement;
@@ -217,7 +217,7 @@ const MessagesPage = () => {
             />
           </label>
           {currentChatId && (
-            <div className="text-center text-sm text-gray-500 bg-secondary p-2 rounded-lg">
+            <div className="text-center text-sm bg-secondary text-secondary-content  p-2 rounded-lg">
               Active chat: {user?.username}
             </div>
           )}
@@ -226,7 +226,7 @@ const MessagesPage = () => {
               {users.map((user) => (
                 <li
                   key={user.id}
-                  className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-secondary hover:cursor-pointer transition-colors"
+                  className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-primary hover:cursor-pointer transition-colors"
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
                   <div className="flex items-center gap-4">
@@ -249,7 +249,7 @@ const MessagesPage = () => {
               {userProfiles.map((user) => (
                 <li
                   key={user.id}
-                  className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-secondary hover:cursor-pointer transition-colors"
+                  className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-primary hover:cursor-pointer hover:text-primary-content transition-colors"
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
                   <div className="flex items-center gap-4">
@@ -300,7 +300,7 @@ const MessagesPage = () => {
                     className={`p-2 rounded-lg max-w-xs  ${
                       msg.senderId === firestoreUser!.uid
                         ? "bg-primary text-primary-content ml-auto"
-                        : "bg-secondary text-secondary-content"
+                        : "bg-neutral text-neutral-content"
                     }`}
                   >
                     <p className="text-md">{msg.text}</p>
@@ -314,7 +314,7 @@ const MessagesPage = () => {
                     </span>
                   </div>
                 ))}
-                <div ref={messageEndRef}/>
+                <div ref={messageEndRef} />
               </div>
               <div className="absolute bottom-30 w-full pr-8">
                 <input

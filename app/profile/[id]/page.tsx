@@ -3,7 +3,18 @@ import React, { useState, useEffect, use } from "react";
 import Navbar from "../../components/Navbar";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../../context/AuthContext";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { useFollowingForums } from "@/app/hooks/useFollowingForums";
+import { useFollowingUsers } from "@/app/hooks/useFollowingUsers";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+
 import FileUpload from "../../components/FileUpload";
 
 interface User {
@@ -18,11 +29,21 @@ interface User {
   coverImageKey?: string;
 }
 
+interface Forum {
+  coverImage: string;
+  createdAt: string;
+  createdBy: string;
+  description: string;
+  forumId: string;
+  name: string;
+  forumImage: string;
+}
+
 interface ProfilePageProps {
-    params: Promise<{
-      id: string;
-    }>;
-  }
+  params: Promise<{
+    id: string;
+  }>;
+}
 
 const UsersProfile = ({ params }: ProfilePageProps) => {
   const { id } = use(params);
@@ -37,6 +58,16 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
   const [newCoverImageUrl, setNewCoverImageUrl] = useState("");
   const [newAvatarKey, setNewAvatarKey] = useState("");
   const [newCoverImageKey, setNewCoverImageKey] = useState("");
+
+  //search toggle
+  const [displayType, setDisplayType] = useState<"Users" | "Forums">("Users");
+
+  // varibale for storing the following users as User objects
+  const [userList, setUserList] = useState<any[]>([]);
+  const [forumsList, setForumsList] = useState<any[]>([]);
+  // getting the list of users in the usbcollection (ids are returned a string array)
+  const followingUserIdList = useFollowingUsers();
+  const followingForumsList = useFollowingForums();
 
   //   check if its the current user's profile
   const itsOwnProfile = user?.uid === id;
@@ -63,6 +94,44 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
     // Cleanup listener when component unmounts
     return () => unsubscribe();
   }, [id]);
+
+  const fetchUsersByIds = async (userIds: string[]) => {
+    const chunks = [];
+    for (let i = 0; i < userIds.length; i += 30) {
+      chunks.push(userIds.slice(i, i + 30));
+    }
+
+    const results: User[] = [];
+    for (const chunk of chunks) {
+      const q = query(collection(db, "users"), where("__name__", "in", chunk));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((docSnap) => {
+        results.push({ id: docSnap.id, ...docSnap.data() } as User);
+      });
+    }
+    setUserList(results);
+  };
+
+  const fetchForumsByIds = async (forums: any[]) => {
+    // Extract the forumIds from the object (forums)
+    const forumIds = forums.map((f) => f.forumId);
+    const chunks = [];
+    for (let i = 0; i < forumIds.length; i += 30) {
+      chunks.push(forumIds.slice(i, i + 30));
+    }
+
+    const results: Forum[] = [];
+    for (const chunk of chunks) {
+      const q = query(collection(db, "forums"), where("__name__", "in", chunk));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data() as Forum;
+        results.push({ ...data, forumId: docSnap.id } as Forum);
+      });
+    }
+    console.log("results:", results);
+    setForumsList(results);
+  };
 
   const handleSave = async () => {
     try {
@@ -192,7 +261,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
       <Navbar />
       <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full ">
         <div>
-          <div className="hero ">
+          <div className="hero">
             <div className="hero-content flex-col w-full bg-base-300 rounded-2xl">
               {/* Cover Image */}
               <div
@@ -229,16 +298,115 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                     </div>
                   </div>
                   <h1 className="text-2xl pt-8 wrap">{profileUser.username}</h1>
-                  <button className="btn" onClick={()=>document.getElementById('my_modal_2').showModal()}>open modal</button>
-<dialog id="my_modal_2" className="modal">
-  <div className="modal-box">
-    <h3 className="font-bold text-lg">Hello!</h3>
-    <p className="py-4">Press ESC key or click outside to close</p>
-  </div>
-  <form method="dialog" className="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+                  <div className="ml-auto pr-4 ">
+                    {itsOwnProfile && !editToggle && (
+                      <button
+                        className="btn btn-primary rounded-full"
+                        onClick={() => {
+                          const modal = document.getElementById(
+                            "following"
+                          ) as HTMLDialogElement | null;
+                          if (modal) modal.showModal();
+                          fetchUsersByIds(followingUserIdList);
+                          fetchForumsByIds(followingForumsList);
+                        }}
+                      >
+                        check following
+                      </button>
+                    )}
+                  </div>
+                  <dialog id="following" className="modal justify-center ">
+                    <div className="modal-box max-w-5xl">
+                      <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                          ✕
+                        </button>
+                      </form>
+                      <h3 className="font-bold text-lg ">Following</h3>
+                      <div className="join join-horizontal flex justify-center my-4">
+                        <button
+                          className={`btn join-item ${
+                            displayType === "Users"
+                              ? "bg-primary text-primary-content"
+                              : "bg-none"
+                          }`}
+                          aria-label="Users"
+                          value="users"
+                          onClick={() => setDisplayType("Users")}
+                        >
+                          Users
+                        </button>
+                        <button
+                          className={`btn join-item ${
+                            displayType === "Forums"
+                              ? "bg-primary text-primary-content"
+                              : "bg-none"
+                          }`}
+                          aria-label="Forums"
+                          value="forums"
+                          onClick={() => setDisplayType("Forums")}
+                        >
+                          Forums
+                        </button>
+                      </div>
+                      <ul className="list w-full md:w-130 lg:w-190 xl:w-200 rounded-2xl shadow-md bg-base-200">
+                        <li className="p-4 pb-2 text-xs tracking-wide">
+                          Followed{" "}
+                          {displayType === "Users" ? "Users" : "Forums"}
+                        </li>
+                        {displayType === "Users" &&
+                          userList.map((user) => (
+                            <li
+                              key={user.id}
+                              className="flex items-center justify-between p-4"
+                            >
+                              <a
+                                href={`/profile/${user.id}`}
+                                className="flex items-center gap-4"
+                              >
+                                <img
+                                  className="size-16 object-contain rounded-box"
+                                  src={user.photoURL}
+                                  alt={user.username}
+                                />
+                                <div className="">
+                                  <p className="text-base">{user.username}</p>
+                                  <p className="uppercase text-xs">
+                                    {user.email}
+                                  </p>
+                                </div>
+                              </a>
+                            </li>
+                            
+                          ))}
+                        {displayType === "Forums" &&
+                          forumsList.map((forum) => (
+                            <li
+                              key={forum.forumId}
+                              className="flex items-center justify-between p-4"
+                            >
+                              <a
+                                href={`/forum/${forum.forumId}`}
+                                className="flex items-center gap-4"
+                              >
+                                <img
+                                  className="size-16 object-contain rounded-box"
+                                  src={forum.forumImage}
+                                  alt={forum.forumName}
+                                />
+                                <div className="">
+                                  <p className="text-base">{forum.name}</p>
+                                </div>
+                              </a>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                    <form method="dialog" className="modal-backdrop">
+                      <button>close</button>
+                    </form>
+                  </dialog>
                 </div>
                 {editToggle && itsOwnProfile ? (
                   <div>
@@ -268,7 +436,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                   <div className="justify-center flex flex-row gap-4">
                     <button
                       onClick={() => handleCancel()}
-                      className="btn btn-accent"
+                      className="btn btn-error"
                     >
                       cancel
                     </button>
@@ -284,7 +452,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
               {!editToggle && itsOwnProfile && (
                 <button
                   onClick={() => setEditToggle(true)}
-                  className="btn btn-primary"
+                  className="btn btn-primary rounded-2xl"
                 >
                   Edit Profile
                 </button>

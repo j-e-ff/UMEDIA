@@ -101,10 +101,10 @@ const ForumPage = ({ params }: ForumPageProps) => {
   return (
     <div className="flex flex-row ml-64 min-h-screen">
       <Navbar />
-      <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full ">
+      <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full text-secondary-content">
         <div>
           <div className="hero">
-            <div className="hero-content flex-col w-full bg-primary rounded-2xl">
+            <div className="hero-content flex-col w-full bg-accent rounded-2xl">
               {/* Cover Image */}
               <div
                 className="w-full h-80 bg-cover object-cover bg-center relative rounded-xl"
