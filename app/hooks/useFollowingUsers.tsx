@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../context/AuthContext";
-
 
 export function useFollowingUsers() {
   const { firestoreUser } = useAuth();
@@ -18,11 +17,15 @@ export function useFollowingUsers() {
         firestoreUser.uid,
         "followingUser"
       );
-      
-      const querySnapshot = await getDocs(followingUsersCollectionRef);
-      // the subcollection only contains the user ids as document ids and followedAt as field, se we just map the doc ids
-      const usersList: string[] = querySnapshot.docs.map((doc) =>  doc.id); 
-      setFollowingUsers(usersList);
+
+      //  realtime listener
+      const unsubscribe = onSnapshot(
+        followingUsersCollectionRef,
+        (snapshot) => {
+          const userList = snapshot.docs.map((doc) => doc.id);
+          setFollowingUsers(userList);
+        }
+      );
     };
     fetchFollowingUsers();
   }, [firestoreUser?.uid]);

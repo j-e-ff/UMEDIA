@@ -27,6 +27,7 @@ interface Post {
   createdAt: any;
   updatedAt: any;
   userName: string;
+  userImage: string;
 }
 
 interface User {
@@ -228,6 +229,7 @@ const Posting = () => {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         userName: username,
+        userImage: firestoreUser.photoURL,
       };
 
       // add the post to firestore

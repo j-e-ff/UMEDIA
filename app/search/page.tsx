@@ -4,25 +4,15 @@ import { useAuth } from "@/app/context/AuthContext";
 import Navbar from "../components/Navbar";
 import { useUsers } from "../hooks/useUsers";
 import { useForums } from "../hooks/useForums";
+import { followUser } from "../utils/followUser";
+import { unfollowUser } from "../utils/unfollowUser";
+import { followForum } from "../utils/followForum";
+import { unfollowForum } from "../utils/unfollowForum";
 import {
   collection,
-  deleteDoc,
-  doc,
   onSnapshot,
-  setDoc,
-  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-
-interface Forum {
-  createdAt: string;
-  createdBy: string;
-  coverImage: string;
-  description: string;
-  forumId: string;
-  forumImage: string;
-  name: string;
-}
 
 const SearchPage = () => {
   const { firestoreUser, isAuthenticated } = useAuth();
@@ -72,50 +62,10 @@ const SearchPage = () => {
     return () => unsubscribe();
   }, [firestoreUser?.uid]);
 
-  async function followUser(currentUserId: string, targetUserId: string) {
-    // add to "followingUser" subcollection in firestore
-    await setDoc(
-      doc(db, "users", currentUserId, "followingUser", targetUserId),
-      { followedAt: serverTimestamp() }
-    );
-
-    // add to "followers" subcollection
-    await setDoc(doc(db, "users", targetUserId, "followers", currentUserId), {
-      followedAt: serverTimestamp(),
-    });
-  }
-
-  async function unfollowUser(currentUserId: string, targetUserId: string) {
-    // Remove targetUserId from currentUserId's followingUser subcollection
-    await deleteDoc(
-      doc(db, "users", currentUserId, "followingUser", targetUserId)
-    );
-
-    // Remove currentUserId from targetUserId's followers subcollection
-    await deleteDoc(doc(db, "users", targetUserId, "followers", currentUserId));
-  }
-
-  async function followForum(currentUserId: string, forum: Forum) {
-    // add to followingForum subcollection in firestore
-    // adding only the followedAt, name, and forumId (used to display when creating a post)
-    await setDoc(
-      doc(db, "users", currentUserId, "followingForum", forum.forumId),
-      {
-        followedAt: serverTimestamp(),
-        name: forum.name,
-        forumId: forum.forumId,
-      }
-    );
-  }
-
-  async function unfollowForum(currentUserId: string, forumId: string) {
-    await deleteDoc(doc(db, "users", currentUserId, "followingForum", forumId));
-  }
-
   return (
-    <div className="flex flex-row ml-64 min-h-screen">
+    <div className="flex flex-row ml-20 min-h-screen xl:ml-64">
       <Navbar />
-      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-12  sm:p-20 w-full">
+      <div className="font-sans flex flex-col items-center min-h-screen pb-12 sm:p-20  ">
         <h1 className="mb-8">SEARCH PAGE</h1>
         <label className="input">
           <svg
@@ -177,57 +127,53 @@ const SearchPage = () => {
                   List of all users
                 </li>
                 {users.map((user) => (
-                  <a
-                    href={`/profile/${user.id}`}
+                  <li
                     key={user.id}
-                    className="flex items-center justify-between hover:bg-primary hover:text-primary-content "
+                    onClick={() =>
+                      (window.location.href = `/profile/${user.id}`)
+                    } // whole row navigates
+                    className="flex items-center justify-between cursor-pointer py-2 px-4  hover:bg-primary hover:text-primary-content"
                   >
-                    <li
-                      key={user.id}
-                      className="flex items-center justify-between  w-full"
-                    >
-                      <div className="flex items-center gap-4 pl-4">
-                        <img
-                          className="size-16 object-contain rounded-box "
-                          src={user.photoURL}
-                          alt={user.username}
-                        />
-                        <div>
-                          <p className="text-base">{user.username}</p>
-                          <p className="uppercase text-xs">{user.email}</p>
-                        </div>
+                    <div className="flex items-center gap-4 ">
+                      <img
+                        className="size-16 object-contain rounded-box"
+                        src={user.photoURL}
+                        alt={user.username}
+                      />
+                      <div>
+                        <p className="text-base">{user.username}</p>
+                        <p className="uppercase text-xs">{user.email}</p>
                       </div>
+                    </div>
 
-                      {isAuthenticated && firestoreUser?.uid !== user.id && (
-                        <button
-                          onClick={() =>
-                            following.includes(user.id)
-                              ? unfollowUser(firestoreUser?.uid!, user.id)
-                              : followUser(firestoreUser?.uid!, user.id)
-                          }
-                          className="btn btn-circle ml-16 bg-transparent"
+                    {isAuthenticated && firestoreUser?.uid !== user.id && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          following.includes(user.id)
+                            ? unfollowUser(firestoreUser?.uid!, user.id)
+                            : followUser(firestoreUser?.uid!, user.id);
+                        }}
+                        className="btn btn-circle ml-16 bg-transparent border-none"
+                      >
+                        <svg
+                          className="size-[1.2em] hover:size-[1.7em]"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
                         >
-                          <svg
-                            className="size-[1.2em] hover:size-[1.7em] "
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
+                          <g
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                            fill={following.includes(user.id) ? "red" : "none"}
+                            stroke="currentColor"
                           >
-                            <g
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeWidth="2"
-                              fill={
-                                following.includes(user.id) ? "red" : "none"
-                              }
-                              stroke="currentColor"
-                            >
-                              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                            </g>
-                          </svg>
-                        </button>
-                      )}
-                    </li>
-                  </a>
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                          </g>
+                        </svg>
+                      </button>
+                    )}
+                  </li>
                 ))}
               </ul>
             )}
@@ -239,31 +185,29 @@ const SearchPage = () => {
                 {forums.map((forum) => (
                   <li
                     key={forum.forumId}
-                    className="flex items-center justify-between p-4 hover:bg-primary hover:text-primary-content"
+                    onClick={() =>
+                      (window.location.href = `/forum/${forum.forumId}`)
+                    } // whole row navigates
+                    className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                   >
-                    <a
-                      href={`/forum/${forum.forumId}`}
-                      className="flex items-center gap-4"
-                    >
+                    <div className="flex items-center gap-4">
                       <img
                         className="size-16 object-contain rounded-box"
                         src={forum.forumImage}
                         alt={forum.name}
                       />
-                      <div className="">
-                        <p className="text-base">{forum.name}</p>
-                        {/* <p className="text-xs">{forum.email}</p> */}
-                      </div>
-                    </a>
+                      <p className="text-base">{forum.name}</p>
+                    </div>
 
                     {isAuthenticated && (
                       <button
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           followingForums.includes(forum.forumId)
                             ? unfollowForum(firestoreUser?.uid!, forum.forumId)
-                            : followForum(firestoreUser?.uid!, forum)
-                        }
-                        className="btn btn-circle ml-16 bg-transparent"
+                            : followForum(firestoreUser?.uid!, forum);
+                        }}
+                        className="btn btn-circle ml-16 bg-transparent border-none"
                       >
                         <svg
                           className="size-[1.2em] hover:size-[1.9em] "

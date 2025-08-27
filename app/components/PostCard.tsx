@@ -10,6 +10,7 @@ interface Post {
   updatedAt: any;
   userId: string;
   userName: string;
+  userImage?: string;
 }
 
 type PostCardProps = {
@@ -28,22 +29,24 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   return (
-    <div>
-      <div className="h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl">
-        <div className="card-body h-24 overflow-y-auto">
+    <div >
+      <div className="h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl ">
+        <div className="card-body h-24 overflow-y-auto ">
           <h2 className="card-title">
+            <div>
+              <img src={post.userImage ? post.userImage : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"}  className="w-12 h-12 rounded-full object-cover" />
+            </div>
             @{post.userName}: {post.title}
           </h2>
         </div>
         {post.photoUrls.length > 0 && (
           <figure className="px-6 pb-4 flex flex-col items-center ">
             <div className=" h-130 flex items-center justify-center">
-              {/* Image with smooth transition */}
               <img
                 key={currentImageIndex} // re-trigger transition on index change
                 src={post.photoUrls[currentImageIndex]}
                 alt={`Image ${currentImageIndex + 1}`}
-                className="w-180 h-full object-contain rounded-lg "
+                className="w-180  h-full object-contain rounded-lg "
               />
             </div>
             <div className="flex justify-center mt-4 gap-8">

@@ -27,7 +27,8 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
   const [displayType, setDisplayType] = useState<"general" | "forums">(
     "general"
   );
-  const postsToDisplay = displayType === "general" ? posts : forumPosts;
+  const postsToDisplay =
+    displayType === "general" && location === "home" ? posts : forumPosts;
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -91,41 +92,39 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
   }
 
   return (
-    <div className="flex flex-row">
-      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 sm:p-20 w-full gap-10">
-        {location === "home" && (
-          <div className="join join-horizontal">
-            <button
-              className={`btn join-item ${
-                displayType === "general"
-                  ? "bg-primary text-primary-content"
-                  : "bg-none"
-              }`}
-              aria-label="Users"
-              value="users"
-              onClick={() => setDisplayType("general")}
-            >
-              Users
-            </button>
-            <button
-              className={`btn join-item ${
-                displayType === "forums"
-                  ? "bg-primary text-primary-content"
-                  : "bg-none"
-              }`}
-              aria-label="Forums"
-              value="forums"
-              onClick={() => setDisplayType("forums")}
-            >
-              Forums
-            </button>
-          </div>
-        )}
-        {/* Render posts based on displayType */}
-        {postsToDisplay.map((post) => (
-          <PostCard key={post.postId} post={post} />
-        ))}
-      </div>
+    <div className="font-sans flex flex-col items-center  min-screen sm:p-20 w-full gap-10">
+      {location === "home" && (
+        <div className="join join-horizontal  ">
+          <button
+            className={`btn join-item ${
+              displayType === "general"
+                ? "bg-primary text-primary-content"
+                : "bg-none"
+            }`}
+            aria-label="Users"
+            value="users"
+            onClick={() => setDisplayType("general")}
+          >
+            Users
+          </button>
+          <button
+            className={`btn join-item ${
+              displayType === "forums"
+                ? "bg-primary text-primary-content"
+                : "bg-none"
+            }`}
+            aria-label="Forums"
+            value="forums"
+            onClick={() => setDisplayType("forums")}
+          >
+            Forums
+          </button>
+        </div>
+      )}
+      {/* Render posts based on displayType */}
+      {postsToDisplay.map((post) => (
+        <PostCard key={post.postId} post={post} />
+      ))}
     </div>
   );
 };
