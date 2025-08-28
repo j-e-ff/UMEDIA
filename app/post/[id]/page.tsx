@@ -4,14 +4,16 @@ import Navbar from "../../components/Navbar";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import {
+  writeBatch,
   collection,
   doc,
   onSnapshot,
   setDoc,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
-import PostCard from "@/app/components/PostCard";
-import FileUpload from "../../components/FileUpload";
+import { likePost } from "@/app/utils/likePost";
+import { unlikePost } from "@/app/utils/unlikePost";
 
 interface Post {
   description: string;
@@ -41,7 +43,7 @@ interface FirestoreUser {
 interface Comment {
   comment: string;
   commentId: string;
-  createdAt: Date;
+  createdAt: Timestamp;
   userId: string;
   userName: string;
   userAvatar: string;
@@ -61,6 +63,7 @@ const PostPage = ({ params }: PostPageProps) => {
   const [comment, setComment] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [commentsList, setCommentsList] = useState<Comment[]>([]);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -98,6 +101,20 @@ const PostPage = ({ params }: PostPageProps) => {
     });
     return () => unsubscribe();
   }, [id]);
+
+  // getting the subcollection of users that liked the post
+  useEffect(() => {
+    const likedPostRef = collection(db, "posts", id, "likes");
+
+    // real-time listener
+    const unsubscribe = onSnapshot(likedPostRef, (querySnapshot) => {
+      const userIds = querySnapshot.docs.map((doc) => doc.id);
+      if (firestoreUser) {
+        setIsLiked(userIds.includes(firestoreUser.uid));
+      }
+    });
+    return () => unsubscribe();
+  }, [id, firestoreUser]);
 
   async function submitComment(
     comment: string,
@@ -201,7 +218,17 @@ const PostPage = ({ params }: PostPageProps) => {
               <span>{post.description}</span>
             </div>
             <div className="flex gap-4 px-6 py-4">
-              <button className="btn btn-primary rounded-2xl">
+              {/* Like button */}
+              <button
+                onClick={() => {
+                  if (isLiked) {
+                    unlikePost(firestoreUser!.uid, id);
+                  } else {
+                    likePost(firestoreUser!.uid, id);
+                  }
+                }}
+                className="btn btn-primary rounded-2xl"
+              >
                 <svg
                   className="size-[1.2em]"
                   xmlns="http://www.w3.org/2000/svg"
@@ -211,12 +238,7 @@ const PostPage = ({ params }: PostPageProps) => {
                     strokeLinejoin="round"
                     strokeLinecap="round"
                     strokeWidth="2"
-                    fill={
-                      "none"
-                      // followingForums.includes(forum.forumId)
-                      //   ? "red"
-                      //   : "none"
-                    }
+                    fill={isLiked ? "red" : "none"}
                     stroke="currentColor"
                   >
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
@@ -281,13 +303,22 @@ const PostPage = ({ params }: PostPageProps) => {
             <div className="px-6">
               {commentsList.map((comment) => (
                 <li key={comment.commentId} className="flex p-4">
-                  <img
-                    src={comment.userAvatar}
-                    className="size-12 object-contain rounded-box"
-                  />
-                  <div>
-                    <p>{comment.userName}</p>
-                    <p>{comment.comment}</p>
+                  <div className="">
+                    <div className="flex items-center pb-4">
+                      <img
+                        src={comment.userAvatar}
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="pl-2 text-lg">{comment.userName}</p>
+                        <p className="text-xs pl-2">
+                          {comment.createdAt
+                            ? comment.createdAt.toDate().toLocaleString()
+                            : "Loading..."}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="px-10">{comment.comment}</p>
                   </div>
                 </li>
               ))}
