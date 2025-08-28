@@ -12,7 +12,6 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import DisplayPost from "@/app/components/DisplayPost";
-import { useFollowingForums } from "@/app/hooks/useFollowingForums";
 import FileUpload from "../../components/FileUpload";
 
 interface Forum {
@@ -99,12 +98,12 @@ const ForumPage = ({ params }: ForumPageProps) => {
   if (!forum) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-row ml-64 min-h-screen">
+    <div className="flex flex-row min-h-screen bg-neutral">
       <Navbar />
-      <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full text-secondary-content">
+      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-20 xl:ml-64 sm:p-20 w-full">
         <div>
           <div className="hero">
-            <div className="hero-content flex-col w-full bg-accent rounded-2xl">
+            <div className="hero-content flex-col w-full bg-base-300 rounded-2xl">
               {/* Cover Image */}
               <div
                 className="w-full h-80 bg-cover object-cover bg-center relative rounded-xl"
@@ -116,7 +115,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
               ></div>
               <div className="flex flex-col w-full gap-4 pl-12">
                 <div className="flex flex-row">
-                  <div className="avatar">
+                  <div className="avatar ">
                     <div className="w-22 rounded-full absolute -top-18">
                       <img src={forum.forumImage} alt=":(" />
                     </div>
@@ -129,7 +128,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
                           ? unfollowForum()
                           : followForum()
                       }
-                      className="btn btn-square bg-base-300 border-0 hover:border-accent hover:border-2 hover:bg-base-200 ml-auto mr-20"
+                      className="btn btn-circle ml-auto mr-12 bg-transparent border-none"
                     >
                       <svg
                         className="size-[1.2em]"

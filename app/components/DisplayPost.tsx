@@ -5,7 +5,7 @@ import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import PostCard from "./PostCard";
 
 interface Post {
-  comments: string;
+  description: string;
   createdAt: any;
   forumId: string;
   photoUrls: string[];

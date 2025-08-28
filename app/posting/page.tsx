@@ -20,7 +20,9 @@ import {
 interface Post {
   userId: string;
   title: string;
-  comments: string;
+  description: string;
+  dislikes: number;
+  likes:number;
   photoUrls: string[];
   forumId: string;
   postId: string;
@@ -60,7 +62,7 @@ const Posting = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [title, setTitle] = useState("");
-  const [comments, setComments] = useState("");
+  const [description, setDescription] = useState("");
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [forumId, setForumId] = useState("general");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -213,23 +215,21 @@ const Posting = () => {
       return;
     }
 
-    if (!comments.trim()) {
-      alert("please enter some comment");
-      return;
-    }
     setIsSubmitting(true);
     try {
       // create a new post document
       const postData: Omit<Post, "postId"> = {
         userId: user.uid,
         title: title.trim(),
-        comments: comments.trim(),
+        description: description.trim(),
         photoUrls: photoUrls,
         forumId: forumId,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         userName: username,
         userImage: firestoreUser.photoURL,
+        likes:0,
+        dislikes:0,
       };
 
       // add the post to firestore
@@ -247,13 +247,13 @@ const Posting = () => {
 
       //   reset form
       setTitle("");
-      setComments("");
+      setDescription("");
       setForumId("general");
       setPhotoUrls([]);
       setUploadedFiles([]);
 
-      alert("post created successfully!");
-      router.push("/");
+      // Redirect to homepage with success parameter
+      router.push("/?postCreated=true");
     } catch (error) {
       console.error("Error creating post:", error);
     } finally {
@@ -374,7 +374,7 @@ const Posting = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="input input-secondary w-full"
-                  placeholder="Enter you post title"
+                  placeholder="Enter your post title"
                   required
                 />
               </div>
@@ -407,22 +407,22 @@ const Posting = () => {
               {/* content input */}
               <div>
                 <label
-                  htmlFor="comments"
+                  htmlFor="Description"
                   className="block text-md font-medium  mb-2"
                 >
-                  Content *
+                  Content (optional)
                 </label>
                 <textarea
-                  id="comments"
-                  value={comments}
-                  onChange={(e) => setComments(e.target.value)}
-                  placeholder="comment section"
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="description section"
                   className="textarea textarea-secondary w-full"
                   required
                 ></textarea>
               </div>
               <div>
-                <label className="block text-md font-medium  mb-2">
+                <label className="block text-md font-medium mb-2">
                   Images (optional)
                 </label>
                 <FileUpload onFilesUploaded={handleFilesUploaded} />
@@ -432,16 +432,16 @@ const Posting = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn btn-accent"
+                  className="btn btn-success"
                 >
                   {isSubmitting ? (
                     <>
                       <span className="loading loading-spinner loading-sm text-secondary">
-                        creating post
+                        creating Post
                       </span>
                     </>
                   ) : (
-                    "create post"
+                    "create Post"
                   )}
                 </button>
               </div>
@@ -514,12 +514,12 @@ const Posting = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn btn-accent"
+                  className="btn btn-success"
                 >
                   {isSubmitting ? (
                     <>
                       <span className="loading loading-spinner loading-sm text-secondary">
-                        creating forum
+                        creating Forum
                       </span>
                     </>
                   ) : (

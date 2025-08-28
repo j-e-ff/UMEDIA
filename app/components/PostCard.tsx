@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface Post {
-  comments: string;
+  description: string;
   createdAt: any;
   forumId: string;
   photoUrls: string[];
@@ -32,12 +32,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <div >
       <div className="h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl ">
         <div className="card-body h-24 overflow-y-auto ">
-          <h2 className="card-title">
-            <div>
-              <img src={post.userImage ? post.userImage : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"}  className="w-12 h-12 rounded-full object-cover" />
-            </div>
-            @{post.userName}: {post.title}
-          </h2>
+          <a href={`/post/${post.postId}`}>
+            <h2 className="card-title">
+              <div>
+                <img src={post.userImage ? post.userImage : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"}  className="w-12 h-12 rounded-full object-cover" />
+              </div>
+              @{post.userName}: {post.title}
+            </h2>
+          </a>
         </div>
         {post.photoUrls.length > 0 && (
           <figure className="px-6 pb-4 flex flex-col items-center ">

@@ -9,10 +9,10 @@ const Navbar = () => {
   return (
     <div>
       {/* Permanent Sidebar */}
-      <nav className="fixed top-0 left-0 h-screen lg:w-20 xl:w-55 bg-base-300 text-base-content shadow flex flex-col justify-between">
+      <nav className="fixed top-0 left-0 h-screen lg:w-20 xl:w-50 bg-base-300 text-base-content flex flex-col justify-between">
         <ul className="menu space-y-3 text-xl pt-4">
           <li>
-            <a href="/" className="md:text-2xl sm:text-sm w-full">
+            <a href="/" className="md:text-2xl sm:text-sm w-full p-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -25,7 +25,7 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href="/search" className="md:text-2xl sm:text-sm w-full">
+            <a href="/search" className="md:text-2xl sm:text-sm w-full p-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -38,7 +38,7 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href="/messages" className="md:text-2xl sm:text-sm w-full">
+            <a href="/messages" className="md:text-2xl sm:text-sm w-full p-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -51,7 +51,7 @@ const Navbar = () => {
             </a>
           </li>
           {isAuthenticated && (<li>
-            <a href="/posting" className="md:text-2xl sm:text-sm w-full">
+            <a href="/posting" className="md:text-2xl sm:text-sm w-full p-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
