@@ -65,6 +65,7 @@ const PostPage = ({ params }: PostPageProps) => {
   const [commentsList, setCommentsList] = useState<Comment[]>([]);
   const [isLiked, setIsLiked] = useState(false);
 
+  // getting the post
   useEffect(() => {
     if (!id) return;
 
@@ -80,6 +81,7 @@ const PostPage = ({ params }: PostPageProps) => {
     return () => unsubscribe();
   }, [id]);
 
+  // getting the post's comments
   useEffect(() => {
     const postCommentsRef = collection(db, "posts", id, "comments");
 
