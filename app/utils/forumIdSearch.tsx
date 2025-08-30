@@ -4,7 +4,7 @@ import { db } from "@/lib/firebase";
 
 interface Forum {
   coverImage: string;
-  createdAt: any;
+  createdAt: Date;
   createdBy: string;
   description: string;
   forumId: string;

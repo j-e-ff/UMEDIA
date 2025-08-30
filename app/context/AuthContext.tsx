@@ -8,7 +8,7 @@ import {
 } from "react";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
-import { doc, documentSnapshotFromJSON, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 
 //  created FirestoreUser to save information (mainly username) to database
 //  firebase already saves uid,email,photourl but saving it to firestore can allow

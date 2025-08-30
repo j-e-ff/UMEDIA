@@ -9,12 +9,12 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 interface Post {
   description: string;
-  createdAt: any;
+  createdAt: Date;
   forumId: string;
   photoUrls: string[];
   postId: string;
   title: string;
-  updatedAt: any;
+  updatedAt: Date;
   userId: string;
   userName: string;
   userImage?: string;
@@ -22,7 +22,7 @@ interface Post {
 
 interface Forum {
   coverImage: string;
-  createdAt: any;
+  createdAt: Date;
   createdBy: string;
   description: string;
   forumId: string;

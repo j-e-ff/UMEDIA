@@ -6,12 +6,12 @@ import PostCard from "./PostCard";
 
 interface Post {
   description: string;
-  createdAt: any;
+  createdAt: Date;
   forumId: string;
   photoUrls: string[];
   postId: string;
   title: string;
-  updatedAt: any;
+  updatedAt: Date;
   userId: string;
   userName: string;
 }

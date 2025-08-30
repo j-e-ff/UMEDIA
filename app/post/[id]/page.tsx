@@ -19,12 +19,12 @@ import { forumIdSearch } from "@/app/utils/forumIdSearch";
 
 interface Post {
   description: string;
-  createdAt: any;
+  createdAt: Timestamp;
   forumId: string;
   photoUrls: string[];
   postId: string;
   title: string;
-  updatedAt: any;
+  updatedAt: Timestamp;
   userId: string;
   userName: string;
   userImage?: string;
@@ -32,7 +32,7 @@ interface Post {
 
 interface Forum {
   coverImage: string;
-  createdAt: any;
+  createdAt: Timestamp;
   createdBy: string;
   description: string;
   forumId: string;

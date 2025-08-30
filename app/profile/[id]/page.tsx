@@ -43,6 +43,22 @@ interface Forum {
   forumImage: string;
 }
 
+interface ForumHook {
+  forumId: string;
+  forumName: string;
+  followedAt: Date;
+}
+
+interface UploadedFile {
+  id: string;
+  name: string;
+  url: string;
+  fileName?: string; // The actual object key stored in R2
+  status: "uploading" | "success" | "error";
+  progress: number;
+}
+
+
 interface ProfilePageProps {
   params: Promise<{
     id: string;
@@ -69,8 +85,8 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
   const [displayType, setDisplayType] = useState<"Users" | "Forums">("Users");
 
   // varibale for storing the following users as User objects
-  const [userList, setUserList] = useState<any[]>([]);
-  const [forumsList, setForumsList] = useState<any[]>([]);
+  const [userList, setUserList] = useState<User[]>([]);
+  const [forumsList, setForumsList] = useState<Forum[]>([]);
   // getting the list of users in the usbcollection (ids are returned a string array)
   const followingUserIdList = useFollowingUsers();
   const followingForumsList = useFollowingForums();
@@ -137,7 +153,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
     setUserList(results);
   };
 
-  const fetchForumsByIds = async (forums: any[]) => {
+  const fetchForumsByIds = async (forums: ForumHook[]) => {
     // Extract the forumIds from the object (forums)
     const forumIds = forums.map((f) => f.forumId);
     const chunks = [];
@@ -242,14 +258,14 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
     setNewCoverImageKey("");
   };
 
-  const handleAvatarUpload = (files: any[]) => {
+  const handleAvatarUpload = (files: UploadedFile[]) => {
     if (files.length > 0 && files[0].url) {
       setNewAvatarUrl(files[0].url);
       if (files[0].fileName) setNewAvatarKey(files[0].fileName);
     }
   };
 
-  const handleCoverImageUpload = (files: any[]) => {
+  const handleCoverImageUpload = (files: UploadedFile[]) => {
     if (files.length > 0 && files[0].url) {
       setNewCoverImageUrl(files[0].url);
       if (files[0].fileName) setNewCoverImageKey(files[0].fileName);
@@ -298,9 +314,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 }}
               >
                 {editToggle && itsOwnProfile && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="text-white text-center">
-                      <p className="text-lg font-semibold mb-2">Cover Image</p>
+                  <div className="absolute inset-0 bg-black  flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-lg font-semibold mb-2 text-white">Cover Image</p>
                       <FileUpload
                         onFilesUploaded={handleCoverImageUpload}
                         compact={true}
@@ -326,7 +342,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                   <div className="ml-auto pr-4 ">
                     {itsOwnProfile && !editToggle && (
                       <button
-                        className="btn btn-primary rounded-full"
+                        className="btn btn-primary rounded-full "
                         onClick={() => {
                           const modal = document.getElementById(
                             "following"
@@ -486,7 +502,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                 <img
                                   className="size-16 object-contain rounded-box"
                                   src={forum.forumImage}
-                                  alt={forum.forumName}
+                                  alt={forum.name}
                                 />
                                 <p className="text-base">{forum.name}</p>
                               </div>
@@ -535,15 +551,15 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                   {/*  */}
                 </div>
                 {editToggle && itsOwnProfile ? (
-                  <div>
+                  <div >
                     <textarea
                       className="resize textarea textarea-secondary max-w-full"
                       placeholder="Bio"
                       defaultValue={profileUser.bio}
                       onChange={(e) => setBio(e.target.value)}
                     ></textarea>
-                    <div className="w-80 flex flex-row items-baseline">
-                      <p>avatar: </p>
+                    <div className="w-full flex flex-row items-baseline pt-8">
+                      <p className="mr-2">avatar : </p>
                       <FileUpload
                         onFilesUploaded={handleAvatarUpload}
                         compact={true}

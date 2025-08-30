@@ -16,7 +16,7 @@ import FileUpload from "../../components/FileUpload";
 
 interface Forum {
   coverImage: string;
-  createdAt: any;
+  createdAt: Date;
   createdBy: string;
   description: string;
   forumId: string;
@@ -32,7 +32,7 @@ interface ForumPageProps {
 
 const ForumPage = ({ params }: ForumPageProps) => {
   const { id } = use(params);
-  const { user, firestoreUser, loading, isAuthenticated } = useAuth();
+  const { firestoreUser, loading, isAuthenticated } = useAuth();
   const [forum, setForum] = useState<Forum | null>(null);
   const [coverImage, setCoverImage] = useState("");
   const [description, setDescription] = useState("");

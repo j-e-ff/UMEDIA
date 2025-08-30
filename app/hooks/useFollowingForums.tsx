@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 interface Forum {
   forumId: string;
   forumName: string;
-  followedAt: any;
+  followedAt: Date;
 }
 
 export function useFollowingForums() {

@@ -16,7 +16,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
-  where,
+  Timestamp,
 } from "firebase/firestore";
 
 interface User {
@@ -31,14 +31,14 @@ interface Chat {
   chatId: string;
   participants: string[];
   lastMessage: string;
-  updatedAt: Date;
+  updatedAt: Timestamp;
 }
 
 interface ChatMessage {
   id: string;
   senderId: string;
   text: string;
-  createdAt: Date;
+  createdAt: Timestamp;
   seen: boolean;
 }
 
@@ -47,7 +47,7 @@ const MessagesPage = () => {
   const [searchTerm, setSearchTerm] = useState(""); // user search term
   const [messagingIds, setMessagingIds] = useState<string[]>([]); //stores the userId of messaged users
   const [message, setMessage] = useState(""); // message user is sending
-  const [messages, setMessages] = useState<any[]>([]); // entire chat log
+  const [messages, setMessages] = useState<ChatMessage[]>([]); // entire chat log
   const users = useUsers(searchTerm); // list of all user
   const userProfiles = useUserIdSearch(messagingIds); // list of all users profiles
   const [user, setUser] = useState<User | null>(null);
@@ -90,7 +90,9 @@ const MessagesPage = () => {
 
       unsubscribeMessages = onSnapshot(messageQuery, (snapshot) => {
         setMessages(
-          snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+          snapshot.docs.map(
+            (doc) => ({ id: doc.id, ...doc.data() } as ChatMessage)
+          )
         );
       });
     }
@@ -304,11 +306,13 @@ const MessagesPage = () => {
                     }`}
                   >
                     <p className="text-md">{msg.text}</p>
-                    <span className="text-xs">
-                      {msg.createdAt && msg.createdAt.toDate
+                    <span className="text-xs opacity-70">
+                      {msg.createdAt
                         ? msg.createdAt.toDate().toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
+                            hour: "numeric",
+                            minute: "numeric",
+                            month: "short",
+                            day: "2-digit",
                           })
                         : "Just now"}
                     </span>

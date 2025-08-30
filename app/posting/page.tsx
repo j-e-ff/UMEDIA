@@ -15,6 +15,7 @@ import {
   getDocs,
   setDoc,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 
 interface Post {
@@ -26,8 +27,8 @@ interface Post {
   photoUrls: string[];
   forumId: string;
   postId: string;
-  createdAt: any;
-  updatedAt: any;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
   userName: string;
   userImage: string;
 }
@@ -44,7 +45,7 @@ interface User {
 interface Forums {
   name: string;
   description: string;
-  createdAt: any;
+  createdAt: Timestamp;
   createdBy: string;
   coverImage: string;
   forumImage: string;
@@ -54,7 +55,7 @@ interface Forums {
 interface FollowingForum {
   forumId: string;
   forumName: string;
-  followedAt: any;
+  followedAt: Timestamp;
 }
 
 const Posting = () => {
@@ -168,7 +169,7 @@ const Posting = () => {
     setIsSubmitting(true);
     try {
       //create forum document
-      const forumData: Forums = {
+      const forumData = {
         name: forumName,
         description: forumDesc,
         createdAt: serverTimestamp(),
@@ -177,11 +178,7 @@ const Posting = () => {
         forumImage: forumImage,
       };
 
-      const docRef = await addDoc(collection(db, "forums"), {
-        ...forumData,
-        createdBy: firestoreUser!.uid, // or firestoreUser!.uid
-        createdAt: serverTimestamp(),
-      });
+      const docRef = await addDoc(collection(db, "forums"), forumData);
 
       // update the forum with its ID
       await setDoc(
@@ -218,7 +215,7 @@ const Posting = () => {
     setIsSubmitting(true);
     try {
       // create a new post document
-      const postData: Omit<Post, "postId"> = {
+      const postData = {
         userId: user.uid,
         title: title.trim(),
         description: description.trim(),
