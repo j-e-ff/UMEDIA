@@ -22,7 +22,7 @@ interface Post {
   title: string;
   description: string;
   dislikes: number;
-  likes:number;
+  likes: number;
   photoUrls: string[];
   forumId: string;
   postId: string;
@@ -228,8 +228,8 @@ const Posting = () => {
         updatedAt: serverTimestamp(),
         userName: username,
         userImage: firestoreUser.photoURL,
-        likes:0,
-        dislikes:0,
+        likes: 0,
+        dislikes: 0,
       };
 
       // add the post to firestore
@@ -276,8 +276,8 @@ const Posting = () => {
     return (
       <div className="flex flex-row">
         <Navbar />
-        <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-64 sm:p-20 w-full">
-          <div className="w-full max-w-4xl">
+        <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-4 pb-20 ml-16 sm:ml-20 md:ml-20 lg:ml-20 xl:ml-64 w-full max-w-none posting-container">
+          <div className="w-full max-w-4xl px-4">
             <h1 className="text-2xl font-bold mb-4">Sign in to create posts</h1>
             <p className="text-gray-600 mb-4">
               you need to be signed in to create a post
@@ -324,9 +324,9 @@ const Posting = () => {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 xl:ml-64 lg:ml-20 md:ml-60 sm:ml-20 xs:ml-10 sm:p-20 w-full">
+      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 ml-20 xl:ml-64 lg:ml-20 md:ml-20 sm:ml-20 w-full max-w-none">
         <div className="w-full max-w-4xl">
-          <h1 className="text-3xl font-bold mb-8 text-center">
+          <h1 className="mb-8 text-center">
             Create a new {forumToggle ? "forum" : "post"}
           </h1>
 
@@ -364,7 +364,7 @@ const Posting = () => {
               <div>
                 <label
                   htmlFor="title"
-                  className="block text-md font-medium mb-2"
+                  className="block text-md font-medium mb-2 "
                 >
                   Title *
                 </label>
@@ -373,7 +373,7 @@ const Posting = () => {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="input input-secondary w-full"
+                  className="input input-secondary w-full max-w-full min-w-0"
                   placeholder="Enter your post title"
                   required
                 />
@@ -383,7 +383,7 @@ const Posting = () => {
               <div>
                 <label
                   htmlFor="forum"
-                  className="block text-md font-medium  mb-2"
+                  className="block text-md font-medium mb-2"
                 >
                   Forum *
                 </label>
@@ -391,7 +391,7 @@ const Posting = () => {
                   id="forum"
                   value={forumId}
                   onChange={(e) => setForumId(e.target.value)}
-                  className="select select-secondary w-full"
+                  className="select select-secondary w-full max-w-full min-w-0"
                   required
                 >
                   <option value="general">General Discussion</option>
@@ -404,11 +404,11 @@ const Posting = () => {
                   })}
                 </select>
               </div>
-              {/* content input */}
+              {/* description input */}
               <div>
                 <label
                   htmlFor="Description"
-                  className="block text-md font-medium  mb-2"
+                  className="block text-md font-medium mb-2"
                 >
                   Content (optional)
                 </label>
@@ -461,7 +461,7 @@ const Posting = () => {
                   id="Name"
                   value={forumName}
                   onChange={(e) => setForumName(e.target.value)}
-                  className="input input-secondary w-full"
+                  className="input input-secondary w-full max-w-full min-w-0"
                   placeholder="Enter forum name"
                   required
                 />
@@ -478,7 +478,7 @@ const Posting = () => {
                   id="Description"
                   value={forumDesc}
                   onChange={(e) => setForumDesc(e.target.value)}
-                  className="input input-secondary w-full"
+                  className="input input-secondary w-full max-w-full min-w-0"
                   placeholder="Enter forum description"
                   required
                 />

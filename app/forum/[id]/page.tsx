@@ -98,9 +98,9 @@ const ForumPage = ({ params }: ForumPageProps) => {
   if (!forum) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-row min-h-screen bg-neutral">
+    <div className="flex flex-row min-h-screen">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-20 xl:ml-64 sm:p-20 w-full">
+      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-20 xl:ml-64  w-full">
         <div>
           <div className="hero">
             <div className="hero-content flex-col w-full bg-base-300 rounded-2xl">

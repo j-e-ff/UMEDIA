@@ -2,17 +2,10 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../context/AuthContext";
+import { forumIdSearch } from "@/app/utils/forumIdSearch";
 import { likePost } from "@/app/utils/likePost";
 import { unlikePost } from "@/app/utils/unlikePost";
-import {
-  writeBatch,
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-  serverTimestamp,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 
 interface Post {
   description: string;
@@ -27,6 +20,16 @@ interface Post {
   userImage?: string;
 }
 
+interface Forum {
+  coverImage: string;
+  createdAt: any;
+  createdBy: string;
+  description: string;
+  forumId: string;
+  forumImage: string;
+  name: string;
+}
+
 type PostCardProps = {
   post: Post;
 };
@@ -35,6 +38,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { firestoreUser } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [forum, setForum] = useState<Forum | null>();
 
   const handleNext = () => {
     setCurrentImageIndex((prev) => (prev = prev + 1));
@@ -43,6 +47,18 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const handlePrev = () => {
     setCurrentImageIndex((prev) => (prev = prev - 1));
   };
+
+  // useEffect for getting the forum
+  useEffect(() => {
+    const fetchForum = async () => {
+      if (post.forumId && post.forumId != "general") {
+        setForum(await forumIdSearch(post.forumId));
+      } else {
+        setForum(null);
+      }
+    };
+    fetchForum();
+  }, [post.forumId]);
 
   // getting the subcollection of users that liked the post
   useEffect(() => {
@@ -57,25 +73,41 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     });
     return () => unsubscribe();
   }, [post, firestoreUser]);
-  
+
   return (
     <div>
       <div className="h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl ">
         <div className="card-body h-24 overflow-y-auto ">
           <a href={`/post/${post.postId}`}>
-            <h2 className="card-title">
-              <div>
-                <img
-                  src={
-                    post.userImage
-                      ? post.userImage
-                      : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
-                  }
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-              </div>
-              @{post.userName}: {post.title}
-            </h2>
+            {post.forumId === "general" ? (
+              <h2 className="card-title">
+                <div>
+                  <img
+                    src={
+                      post.userImage
+                        ? post.userImage
+                        : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
+                    }
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                </div>
+                @{post.userName}: {post.title}
+              </h2>
+            ) : (
+              <h2 className="card-title">
+                <div>
+                  <img
+                    src={
+                      forum?.forumImage
+                        ? forum.forumImage
+                        : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
+                    }
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                </div>
+                @{forum?.name}: {post.title}
+              </h2>
+            )}
           </a>
         </div>
 

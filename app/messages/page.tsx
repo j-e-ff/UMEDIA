@@ -260,7 +260,7 @@ const MessagesPage = () => {
                     />
                     <div className="lowercase">
                       <p className="text-base font-semibold">{user.username}</p>
-                      <p className="text-xs">{user.email}</p>
+                      <p className="text-xs wrap-anywhere">{user.email}</p>
                     </div>
                   </div>
                 </li>

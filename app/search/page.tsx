@@ -8,10 +8,7 @@ import { followUser } from "../utils/followUser";
 import { unfollowUser } from "../utils/unfollowUser";
 import { followForum } from "../utils/followForum";
 import { unfollowForum } from "../utils/unfollowForum";
-import {
-  collection,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 const SearchPage = () => {
@@ -63,9 +60,9 @@ const SearchPage = () => {
   }, [firestoreUser?.uid]);
 
   return (
-    <div className="flex flex-row ml-20 min-h-screen xl:ml-64">
+    <div className="flex flex-row ml-20 min-h-screen ">
       <Navbar />
-      <div className="font-sans flex flex-col items-center min-h-screen pb-12 sm:p-20  ">
+      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen ml-2 pt-20 w-full">
         <h1 className="mb-8">SEARCH PAGE</h1>
         <label className="input">
           <svg
@@ -94,8 +91,8 @@ const SearchPage = () => {
           />
         </label>
         <div className="flex flex-row">
-          <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-8 sm:p-20 w-full">
-            <div className="join join-horizontal">
+          <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen ml-2 pt-10 w-full">
+            <div className="join join-horizontal pb-10 ml-2">
               <button
                 className={`btn join-item ${
                   searchType === "Users"
@@ -122,60 +119,63 @@ const SearchPage = () => {
               </button>
             </div>
             {searchType === "Users" && (
-              <ul className="list w-full md:w-130 lg:w-190 xl:w-200 rounded-2xl shadow-md bg-base-200">
-                <li className="p-4 pb-2 text-xs tracking-wide">
-                  List of all users
-                </li>
-                {users.map((user) => (
-                  <li
-                    key={user.id}
-                    onClick={() =>
-                      (window.location.href = `/profile/${user.id}`)
-                    } // whole row navigates
-                    className="flex items-center justify-between cursor-pointer py-2 px-4  hover:bg-primary hover:text-primary-content"
-                  >
-                    <div className="flex items-center gap-4 ">
-                      <img
-                        className="size-16 object-contain rounded-box"
-                        src={user.photoURL}
-                        alt={user.username}
-                      />
-                      <div>
-                        <p className="text-base">{user.username}</p>
-                        <p className="uppercase text-xs">{user.email}</p>
-                      </div>
-                    </div>
-
-                    {isAuthenticated && firestoreUser?.uid !== user.id && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          following.includes(user.id)
-                            ? unfollowUser(firestoreUser?.uid!, user.id)
-                            : followUser(firestoreUser?.uid!, user.id);
-                        }}
-                        className="btn btn-circle ml-16 bg-transparent border-none"
-                      >
-                        <svg
-                          className="size-[1.2em] hover:size-[1.7em]"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                        >
-                          <g
-                            strokeLinejoin="round"
-                            strokeLinecap="round"
-                            strokeWidth="2"
-                            fill={following.includes(user.id) ? "red" : "none"}
-                            stroke="currentColor"
-                          >
-                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                          </g>
-                        </svg>
-                      </button>
-                    )}
+              <div className="">
+                <ul className="list w-full md:w-130 lg:w-190 xl:w-200 rounded-2xl shadow-md bg-base-200">
+                  <li className="p-4 pb-2 text-xs tracking-wide">
+                    List of all users
                   </li>
-                ))}
-              </ul>
+                  {users.map((user) => (
+                    <li
+                      key={user.id}
+                      onClick={() =>
+                        (window.location.href = `/profile/${user.id}`)
+                      } // whole row navigates
+                      className="flex items-center justify-between cursor-pointer py-2 px-4  hover:bg-primary hover:text-primary-content"
+                    >
+                      <div className="flex items-center gap-4 ">
+                        <img
+                          className="size-16 object-contain rounded-box"
+                          src={user.photoURL}
+                          alt={user.username}
+                        />
+                        <div>
+                          <p className="text-base">{user.username}</p>
+                          <p className="uppercase text-xs">{user.email}</p>
+                        </div>
+                      </div>
+                      {isAuthenticated && firestoreUser?.uid !== user.id && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            following.includes(user.id)
+                              ? unfollowUser(firestoreUser?.uid!, user.id)
+                              : followUser(firestoreUser?.uid!, user.id);
+                          }}
+                          className="btn btn-circle ml-16 bg-transparent border-none"
+                        >
+                          <svg
+                            className="size-[1.2em] hover:size-[1.7em]"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <g
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                              strokeWidth="2"
+                              fill={
+                                following.includes(user.id) ? "red" : "none"
+                              }
+                              stroke="currentColor"
+                            >
+                              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                            </g>
+                          </svg>
+                        </button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
             {searchType === "Forums" && (
               <ul className="list w-full md:w-130 lg:w-190 xl:w-200 rounded-2xl shadow-md bg-base-200">

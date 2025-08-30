@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
+import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../../context/AuthContext";
@@ -14,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { likePost } from "@/app/utils/likePost";
 import { unlikePost } from "@/app/utils/unlikePost";
+import { forumIdSearch } from "@/app/utils/forumIdSearch";
 
 interface Post {
   description: string;
@@ -26,6 +28,16 @@ interface Post {
   userId: string;
   userName: string;
   userImage?: string;
+}
+
+interface Forum {
+  coverImage: string;
+  createdAt: any;
+  createdBy: string;
+  description: string;
+  forumId: string;
+  forumImage: string;
+  name: string;
 }
 
 interface FirestoreUser {
@@ -64,6 +76,7 @@ const PostPage = ({ params }: PostPageProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [commentsList, setCommentsList] = useState<Comment[]>([]);
   const [isLiked, setIsLiked] = useState(false);
+  const [forum, setForum] = useState<Forum | null>();
 
   // getting the post
   useEffect(() => {
@@ -72,10 +85,13 @@ const PostPage = ({ params }: PostPageProps) => {
     const postRef = doc(db, "posts", id);
 
     // real-time listener
-    const unsubscribe = onSnapshot(postRef, (docSnap) => {
+    const unsubscribe = onSnapshot(postRef, async (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data() as Post;
         setPost(data);
+        if (data.forumId != "general") {
+          setForum(await forumIdSearch(data.forumId));
+        }
       }
     });
     return () => unsubscribe();
@@ -165,7 +181,7 @@ const PostPage = ({ params }: PostPageProps) => {
         <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full ">
           <div className="bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl ">
             <div className="card-body h-24 overflow-y-auto ">
-              <h2 className="card-title">
+              <div className="card-title">
                 <div>
                   <img
                     src={
@@ -176,8 +192,15 @@ const PostPage = ({ params }: PostPageProps) => {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 </div>
-                @{post.userName}: {post.title}
-              </h2>
+                <div className="flex flex-col ">
+                  <p>
+                    @{post.userName}: {post.title}
+                  </p>
+                  <Link href={`/forum/${forum?.forumId}` } >
+                  <p className="block hover:text-info hover:underline">{forum && forum.name} </p>
+                  </Link>
+                </div>
+              </div>
             </div>
             {post.photoUrls.length > 0 && (
               <figure className="px-6 pb-4 flex flex-col items-center ">

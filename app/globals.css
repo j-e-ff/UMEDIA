@@ -4,7 +4,10 @@
 }
 
 body {
-  background-color: var(--bs-body-bg, var(--background)); /* DaisyUI background variable */
-  color: var(--bs-body-fg, var(--foreground));            /* DaisyUI text color variable */
+  background-color: var(
+    --bs-body-bg,
+    var(--background)
+  ); /* DaisyUI background variable */
+  color: var(--bs-body-fg, var(--foreground)); /* DaisyUI text color variable */
   font-family: Arial, Helvetica, sans-serif;
 }

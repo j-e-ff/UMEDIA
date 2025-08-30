@@ -92,7 +92,7 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
   }
 
   return (
-    <div className="font-sans flex flex-col items-center  min-screen sm:p-20 w-full gap-10">
+    <div className="font-sans flex flex-col items-center min-screen w-full gap-10 pb-20">
       {location === "home" && (
         <div className="join join-horizontal  ">
           <button

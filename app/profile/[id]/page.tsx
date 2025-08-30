@@ -339,6 +339,36 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                         check following
                       </button>
                     )}
+                    {isAuthenticated && !editToggle && !itsOwnProfile && (
+                       <button
+                        onClick={() =>
+                          followingUserIdList.includes(id)
+                            ? followUser(firestoreUser!.uid,id)
+                            : unfollowUser(firestoreUser!.uid,id)
+                        }
+                        className="btn btn-circle ml-auto mr-12 bg-transparent border-none"
+                      >
+                        <svg
+                          className="size-[1.2em]"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                        >
+                          <g
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                            fill={
+                              followingUserIdList.includes(id)
+                                ? "red"
+                                : "none"
+                            }
+                            stroke="currentColor"
+                          >
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                          </g>
+                        </svg>
+                      </button>
+                    )}
                   </div>
                   <dialog id="following" className="modal">
                     <div className="modal-box w-11/12 max-w-2xl">

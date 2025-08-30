@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen ml-20 lg:ml-20  sm:ml-20 sm:p-20 w-full">
+      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen ml-20 lg:ml-20 px-2 pt-20 w-full">
         {/* Toast for successful post creation */}
         {showToast && (
           <div className="toast toast-start">
@@ -39,7 +39,7 @@ export default function Home() {
           </div>
         )}
 
-        <h1>HOMEPAGE</h1>
+        <h1 className='pb-15'>HOMEPAGE</h1>
         <HomePage />
       </div>
     </div>
