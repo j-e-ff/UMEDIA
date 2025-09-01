@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
 import { useAuth } from "@/app/context/AuthContext";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
 import {
   collection,
   deleteDoc,
@@ -27,13 +27,9 @@ interface User {
   photoURL: string;
 }
 
-interface UserPageProps {
-  userName: string;
-}
-
 const UserPage = () => {
   const searchParams = useSearchParams();
-  const userName = searchParams.get('userName') || '';
+  const userName = searchParams.get("userName") || "";
   const [users, setUsers] = useState<User[]>([]);
   const { firestoreUser, isAuthenticated } = useAuth();
   const [following, setFollowing] = useState([""]);
@@ -127,11 +123,13 @@ const UserPage = () => {
 
               {firestoreUser?.uid !== user.id && isAuthenticated && (
                 <button
-                  onClick={() =>
-                    following.includes(user.id)
-                      ? unfollowUser(firestoreUser?.uid!, user.id)
-                      : followUser(firestoreUser?.uid!, user.id)
-                  }
+                  onClick={() => {
+                    if (firestoreUser?.uid) {
+                      following.includes(user.id)
+                        ? unfollowUser(firestoreUser.uid, user.id)
+                        : followUser(firestoreUser.uid, user.id);
+                    }
+                  }}
                   className="btn btn-square btn-ghost ml-16"
                 >
                   <svg

@@ -59,7 +59,6 @@ interface UploadedFile {
   progress: number;
 }
 
-
 interface ProfilePageProps {
   params: Promise<{
     id: string;
@@ -317,7 +316,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 {editToggle && itsOwnProfile && (
                   <div className="absolute inset-0 bg-black  flex items-center justify-center">
                     <div className="text-center">
-                      <p className="text-lg font-semibold mb-2 text-white">Cover Image</p>
+                      <p className="text-lg font-semibold mb-2 text-white">
+                        Cover Image
+                      </p>
                       <FileUpload
                         onFilesUploaded={handleCoverImageUpload}
                         compact={true}
@@ -358,11 +359,11 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                       </button>
                     )}
                     {isAuthenticated && !editToggle && !itsOwnProfile && (
-                       <button
+                      <button
                         onClick={() =>
                           followingUserIdList.includes(id)
-                            ? followUser(firestoreUser!.uid,id)
-                            : unfollowUser(firestoreUser!.uid,id)
+                            ? followUser(firestoreUser!.uid, id)
+                            : unfollowUser(firestoreUser!.uid, id)
                         }
                         className="btn btn-circle ml-auto mr-12 bg-transparent border-none"
                       >
@@ -376,9 +377,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                             strokeLinecap="round"
                             strokeWidth="2"
                             fill={
-                              followingUserIdList.includes(id)
-                                ? "red"
-                                : "none"
+                              followingUserIdList.includes(id) ? "red" : "none"
                             }
                             stroke="currentColor"
                           >
@@ -452,43 +451,45 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                 </div>
                               </div>
                               {isAuthenticated &&
-                                  firestoreUser?.uid !== user.id && (
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
+                                firestoreUser?.uid !== user.id && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (firestoreUser?.uid) {
                                         following.includes(user.id)
                                           ? unfollowUser(
-                                              firestoreUser?.uid!,
+                                              firestoreUser.uid,
                                               user.id
                                             )
                                           : followUser(
-                                              firestoreUser?.uid!,
+                                              firestoreUser.uid,
                                               user.id
                                             );
-                                      }}
-                                      className="btn btn-circle bg-transparent border-none "
+                                      }
+                                    }}
+                                    className="btn btn-circle bg-transparent border-none "
+                                  >
+                                    <svg
+                                      className="size-[1.2em] hover:size-[1.7em]"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 24 24"
                                     >
-                                      <svg
-                                        className="size-[1.2em] hover:size-[1.7em]"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
+                                      <g
+                                        strokeLinejoin="round"
+                                        strokeLinecap="round"
+                                        strokeWidth="2"
+                                        fill={
+                                          following.includes(user.id)
+                                            ? "red"
+                                            : "none"
+                                        }
+                                        stroke="currentColor"
                                       >
-                                        <g
-                                          strokeLinejoin="round"
-                                          strokeLinecap="round"
-                                          strokeWidth="2"
-                                          fill={
-                                            following.includes(user.id)
-                                              ? "red"
-                                              : "none"
-                                          }
-                                          stroke="currentColor"
-                                        >
-                                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                                        </g>
-                                      </svg>
-                                    </button>
-                                  )}
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                      </g>
+                                    </svg>
+                                  </button>
+                                )}
                             </li>
                           ))}
                         {displayType === "Forums" &&
@@ -512,12 +513,14 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    followingForums.includes(forum.forumId)
-                                      ? unfollowForum(
-                                          firestoreUser?.uid!,
-                                          forum.forumId
-                                        )
-                                      : followForum(firestoreUser?.uid!, forum);
+                                    if (firestoreUser?.uid) {
+                                      followingForums.includes(forum.forumId)
+                                        ? unfollowForum(
+                                            firestoreUser.uid,
+                                            forum.forumId
+                                          )
+                                        : followForum(firestoreUser.uid, forum);
+                                    }
                                   }}
                                   className="btn btn-circle ml-16 bg-transparent border-none"
                                 >
@@ -553,7 +556,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                   {/*  */}
                 </div>
                 {editToggle && itsOwnProfile ? (
-                  <div >
+                  <div>
                     <textarea
                       className="resize textarea textarea-secondary max-w-full"
                       placeholder="Bio"

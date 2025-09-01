@@ -148,9 +148,11 @@ const SearchPage = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            following.includes(user.id)
-                              ? unfollowUser(firestoreUser?.uid!, user.id)
-                              : followUser(firestoreUser?.uid!, user.id);
+                            if (firestoreUser?.uid) {
+                              following.includes(user.id)
+                                ? unfollowUser(firestoreUser.uid, user.id)
+                                : followUser(firestoreUser.uid, user.id);
+                            }
                           }}
                           className="btn btn-circle ml-16 bg-transparent border-none"
                         >
@@ -204,9 +206,11 @@ const SearchPage = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          followingForums.includes(forum.forumId)
-                            ? unfollowForum(firestoreUser?.uid!, forum.forumId)
-                            : followForum(firestoreUser?.uid!, forum);
+                          if (firestoreUser?.uid) {
+                            followingForums.includes(forum.forumId)
+                              ? unfollowForum(firestoreUser.uid, forum.forumId)
+                              : followForum(firestoreUser.uid, forum);
+                          }
                         }}
                         className="btn btn-circle ml-16 bg-transparent border-none"
                       >
