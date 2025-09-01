@@ -1,10 +1,10 @@
 "use client";
 import Navbar from "./components/Navbar";
 import HomePage from "./home/HomePage";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function Home() {
+function HomeContent() {
   const [showToast, setShowToast] = useState(false);
   const searchParams = useSearchParams();
 
@@ -39,9 +39,17 @@ export default function Home() {
           </div>
         )}
 
-        <h1 className='pb-15'>HOMEPAGE</h1>
+        <h1 className="pb-15">HOMEPAGE</h1>
         <HomePage />
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
