@@ -18,21 +18,6 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-interface Post {
-  userId: string;
-  title: string;
-  description: string;
-  dislikes: number;
-  likes: number;
-  photoUrls: string[];
-  forumId: string;
-  postId: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  userName: string;
-  userImage: string;
-}
-
 interface User {
   id: string;
   name: string;
@@ -41,14 +26,13 @@ interface User {
   photoURL: string;
 }
 
-// interface userd to store Forums and add to the firestore DB
-interface Forums {
+interface UploadedFile {
+  id: string;
   name: string;
-  description: string;
-  createdAt: Timestamp;
-  createdBy: string;
-  coverImage: string;
-  forumImage: string;
+  url: string;
+  fileName?: string; // The actual object key stored in R2
+  status: "uploading" | "success" | "error";
+  progress: number;
 }
 
 // interface user only for fetching forums user follows
@@ -67,7 +51,7 @@ const Posting = () => {
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [forumId, setForumId] = useState("general");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   const [forumToggle, setForumToggle] = useState(false);
   const [forumName, setForumName] = useState("");
@@ -136,7 +120,7 @@ const Posting = () => {
 
   // handle file uploads from FileUpload component
   const handleFilesUploaded = useCallback(
-    (files: any[]) => {
+    (files: UploadedFile[]) => {
       //extract urls from uploaded files
       const urls = files
         .filter((file) => file.status === "success")
@@ -148,7 +132,7 @@ const Posting = () => {
     [forumToggle]
   );
 
-  const handleForumImageUploaded = useCallback((files: any[]) => {
+  const handleForumImageUploaded = useCallback((files: UploadedFile[]) => {
     //extract urls from uploaded files
     const urls = files
       .filter((file) => file.status === "success")

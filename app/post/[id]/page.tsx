@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import {
-  writeBatch,
   collection,
   doc,
   onSnapshot,
@@ -32,7 +32,7 @@ interface Post {
 
 interface Forum {
   coverImage: string;
-  createdAt: Timestamp;
+  createdAt: Date;
   createdBy: string;
   description: string;
   forumId: string;
@@ -183,12 +183,13 @@ const PostPage = ({ params }: PostPageProps) => {
             <div className="card-body h-24 overflow-y-auto ">
               <div className="card-title">
                 <div>
-                  <img
+                  <Image
                     src={
                       post.userImage
                         ? post.userImage
                         : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
                     }
+                    alt="image"
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 </div>
@@ -205,7 +206,7 @@ const PostPage = ({ params }: PostPageProps) => {
             {post.photoUrls.length > 0 && (
               <figure className="px-6 pb-4 flex flex-col items-center ">
                 <div className=" h-130 flex items-center justify-center">
-                  <img
+                  <Image
                     key={currentImageIndex} // re-trigger transition on index change
                     src={post.photoUrls[currentImageIndex]}
                     alt={`Image ${currentImageIndex + 1}`}
@@ -330,8 +331,9 @@ const PostPage = ({ params }: PostPageProps) => {
                 <li key={comment.commentId} className="flex p-4">
                   <div className="">
                     <div className="flex items-center pb-4">
-                      <img
+                      <Image
                         src={comment.userAvatar}
+                        alt="avatar"
                         className="w-8 h-8 rounded-full object-cover"
                       />
                       <div>

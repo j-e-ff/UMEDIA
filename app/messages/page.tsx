@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Navbar from "../components/Navbar";
 import { useUsers } from "../hooks/useUsers";
 import { useUserIdSearch } from "../hooks/useUserIdSearch";
@@ -232,7 +233,7 @@ const MessagesPage = () => {
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
                   <div className="flex items-center gap-4">
-                    <img
+                    <Image
                       className="size-16 object-contain rounded-box"
                       src={user.photoURL}
                       alt={user.username}
@@ -255,7 +256,7 @@ const MessagesPage = () => {
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
                   <div className="flex items-center gap-4">
-                    <img
+                    <Image
                       className="size-16 object-contain rounded-box"
                       src={user.photoURL}
                       alt={user.username}
@@ -275,7 +276,7 @@ const MessagesPage = () => {
           {user && (
             <div>
               <div className="flex flex-row gap-4 items-center">
-                <img
+                <Image
                   className="size-16 object-contain rounded-box"
                   src={user.photoURL}
                   alt={user.username}

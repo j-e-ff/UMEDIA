@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../context/AuthContext";
 import { forumIdSearch } from "@/app/utils/forumIdSearch";
 import { likePost } from "@/app/utils/likePost";
 import { unlikePost } from "@/app/utils/unlikePost";
 import { collection, onSnapshot } from "firebase/firestore";
+
 
 interface Post {
   description: string;
@@ -82,12 +84,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             {post.forumId === "general" ? (
               <h2 className="card-title">
                 <div>
-                  <img
+                  <Image
                     src={
                       post.userImage
                         ? post.userImage
                         : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
                     }
+                    alt="userImage"
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 </div>
@@ -96,12 +99,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             ) : (
               <h2 className="card-title">
                 <div>
-                  <img
+                  <Image
                     src={
                       forum?.forumImage
                         ? forum.forumImage
                         : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
                     }
+                    alt="forumImage"
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 </div>
@@ -136,7 +140,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             </button>
             <figure className="px-6 pb-4 flex flex-col items-center ">
               <div className=" h-130 flex items-center justify-center">
-                <img
+                <Image
                   key={currentImageIndex} // re-trigger transition on index change
                   src={post.photoUrls[currentImageIndex]}
                   alt={`Image ${currentImageIndex + 1}`}

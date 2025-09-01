@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
+import Image from "next/image";
 import Navbar from "../../components/Navbar";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../../context/AuthContext";
@@ -330,11 +331,12 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 <div className="flex flex-row">
                   <div className="avatar ">
                     <div className="w-22 rounded-full absolute -top-18 ">
-                      <img
+                      <Image
                         src={
                           profileUser.photoURL ||
                           "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754629930743-oim.jpg"
                         }
+                        alt="avatar"
                       />
                     </div>
                   </div>
@@ -437,7 +439,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                             >
                               <div className="flex items-center gap-4 ">
-                                <img
+                                <Image
                                   className="size-16 object-contain rounded-box"
                                   src={user.photoURL}
                                   alt={user.username}
@@ -499,7 +501,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                             >
                               <div className="flex items-center gap-4 ">
-                                <img
+                                <Image
                                   className="size-16 object-contain rounded-box"
                                   src={forum.forumImage}
                                   alt={forum.name}

@@ -28,7 +28,7 @@ interface FirestoreUser {
 interface AuthContextType {
   user: User | null;
   firestoreUser: FirestoreUser | null;
-  setFirestoreUser: React.Dispatch<React.SetStateAction<any>>;
+  setFirestoreUser: React.Dispatch<React.SetStateAction<FirestoreUser | null>>;
   loading: boolean;
   isAuthenticated: boolean;
   logout: () => Promise<void>;

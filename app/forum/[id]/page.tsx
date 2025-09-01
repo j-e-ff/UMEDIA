@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
 import Navbar from "../../components/Navbar";
+import Image from "next/image";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -117,7 +118,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
                 <div className="flex flex-row">
                   <div className="avatar ">
                     <div className="w-22 rounded-full absolute -top-18">
-                      <img src={forum.forumImage} alt=":(" />
+                      <Image src={forum.forumImage} alt="avatar" />
                     </div>
                     <h1 className="text-2xl pt-8 wrap">{forum.name}</h1>
                   </div>

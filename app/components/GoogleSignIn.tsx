@@ -2,6 +2,7 @@
 import { useAuth } from "../context/AuthContext";
 import { auth, googleProvider, db } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
+import Image from "next/image";
 import {
   doc,
   getDoc,
@@ -93,7 +94,7 @@ const GoogleSignIn = () => {
           >
             <div className="avatar">
               <div className="w-12 rounded-full">
-                <img
+                <Image
                   src={
                     firestoreUser?.photoURL ||
                     user?.photoURL ||

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 
 interface UploadedFile {
   id: string;
@@ -108,9 +109,7 @@ const FileUpload = ({
           prev.map((f) => (f.id === fileId ? { ...f, progress: 100 } : f))
         );
 
-        // construct the public url for the uploaded file
-        const accountId = process.env.NEXT_PUBLIC_R2_ACCOUNT_ID;
-        const bucketName = process.env.NEXT_PUBLIC_R2_BUCKET_NAME;
+      
         const publicR2BaseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
         const publicUrl = `${publicR2BaseUrl}${encodeURIComponent(fileName)}`;
         // url used when custom domain created
@@ -221,7 +220,7 @@ const FileUpload = ({
               {file.status === "success" && (
                 <div className="space-y-2">
                   <p className="text-green-600 text-sm">✓ Upload successful</p>
-                  <img
+                  <Image
                     src={file.url}
                     alt={file.name}
                     className="max-w-xs border rounded"

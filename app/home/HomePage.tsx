@@ -1,5 +1,4 @@
 "use client";
-import Navbar from "../components/Navbar";
 import DisplayPost from "../components/DisplayPost";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
@@ -7,7 +6,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 const HomePage = () => {
-  const { firestoreUser, isAuthenticated } = useAuth();
+  const { firestoreUser} = useAuth();
   const [following, setFollowing] = useState([""]);
 
   // useEffect for fetching followingForums

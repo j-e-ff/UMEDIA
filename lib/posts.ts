@@ -12,6 +12,7 @@ import {
   orderBy,
   limit,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 
 export interface Post {
@@ -21,8 +22,8 @@ export interface Post {
   photoURLs: string[];
   forumID: string;
   postID: string;
-  createdAt: any;
-  updatedAt: any;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface CreatePostData {

@@ -1,7 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Navbar from "../components/Navbar";
 import { useAuth } from "@/app/context/AuthContext";
+import { useSearchParams } from 'next/navigation';
 import {
   collection,
   deleteDoc,
@@ -29,7 +31,9 @@ interface UserPageProps {
   userName: string;
 }
 
-const UserPage: React.FC<UserPageProps> = ({ userName }) => {
+const UserPage = () => {
+  const searchParams = useSearchParams();
+  const userName = searchParams.get('userName') || '';
   const [users, setUsers] = useState<User[]>([]);
   const { firestoreUser, isAuthenticated } = useAuth();
   const [following, setFollowing] = useState([""]);
@@ -110,7 +114,7 @@ const UserPage: React.FC<UserPageProps> = ({ userName }) => {
                 href={`/profile/${user.id}`}
                 className="flex items-center gap-4"
               >
-                <img
+                <Image
                   className="size-16 object-contain rounded-box"
                   src={user.photoURL}
                   alt={user.username}

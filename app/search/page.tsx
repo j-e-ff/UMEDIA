@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { useAuth } from "@/app/context/AuthContext";
 import Navbar from "../components/Navbar";
 import { useUsers } from "../hooks/useUsers";
@@ -133,7 +134,7 @@ const SearchPage = () => {
                       className="flex items-center justify-between cursor-pointer py-2 px-4  hover:bg-primary hover:text-primary-content"
                     >
                       <div className="flex items-center gap-4 ">
-                        <img
+                        <Image
                           className="size-16 object-contain rounded-box"
                           src={user.photoURL}
                           alt={user.username}
@@ -191,7 +192,7 @@ const SearchPage = () => {
                     className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                   >
                     <div className="flex items-center gap-4">
-                      <img
+                      <Image
                         className="size-16 object-contain rounded-box"
                         src={forum.forumImage}
                         alt={forum.name}
