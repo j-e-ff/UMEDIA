@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
 import { useAuth } from "@/app/context/AuthContext";
@@ -27,7 +27,7 @@ interface User {
   photoURL: string;
 }
 
-const UserPage = () => {
+function UserPageContent() {
   const searchParams = useSearchParams();
   const userName = searchParams.get("userName") || "";
   const [users, setUsers] = useState<User[]>([]);
@@ -154,6 +154,14 @@ const UserPage = () => {
         </ul>
       </div>
     </div>
+  );
+}
+
+const UserPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UserPageContent />
+    </Suspense>
   );
 };
 
