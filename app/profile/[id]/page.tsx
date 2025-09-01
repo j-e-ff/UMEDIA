@@ -334,8 +334,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                     <div className="w-22 rounded-full absolute -top-18 ">
                       <Image
                         src={
-                          profileUser.photoURL ||
-                          "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754629930743-oim.jpg"
+                          profileUser.photoKey? 
+                          profileUser.photoKey : 
+                          profileUser.photoURL
                         }
                         alt="avatar"
                       />
