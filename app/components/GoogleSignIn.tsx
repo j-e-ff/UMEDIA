@@ -13,6 +13,18 @@ import {
   getDocs,
 } from "firebase/firestore";
 
+interface FirestoreUser {
+  uid: string;
+  email: string;
+  username: string;
+  photoURL: string;
+  photoKey?: string;
+  createdAt: Date;
+  bio: string;
+  coverImage: string;
+  coverImageKey?: string;
+}
+
 const GoogleSignIn = () => {
   const {
     user,
@@ -70,9 +82,19 @@ const GoogleSignIn = () => {
         });
         // set and update context (refresh to display name)
         const newUserSnap = await getDoc(userRef);
-        setFirestoreUser(newUserSnap.data());
+        if (newUserSnap.exists()) {
+          setFirestoreUser(newUserSnap.data() as FirestoreUser);
+        } else {
+          setFirestoreUser(null);
+          console.log("user does not exist", userRef);
+        }
       } else {
         console.log("User already exists:", userSnap.data());
+        if (userSnap.exists()) {
+          setFirestoreUser(userSnap.data() as FirestoreUser);
+        } else {
+          setFirestoreUser(null);
+        }
       }
     } catch (error) {
       console.error("Login Failed:", error);
@@ -105,7 +127,9 @@ const GoogleSignIn = () => {
               </div>
             </div>
             <div>
-              <p className="card-title text-xs hidden xl:inline text-primary-content">{firestoreUser?.username}</p>
+              <p className="card-title text-xs hidden xl:inline text-primary-content">
+                {firestoreUser?.username}
+              </p>
             </div>
           </div>
           <ul
