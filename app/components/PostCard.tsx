@@ -41,6 +41,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [forum, setForum] = useState<Forum | null>();
+  const testpost = post;
+  console.log("testPost", testpost);
 
   const handleNext = () => {
     setCurrentImageIndex((prev) => (prev = prev + 1));
@@ -88,7 +90,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     src={
                       post.userImage
                         ? post.userImage
-                        : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
+                        : "https://cdn.rodasjeffrey.com/1754019117887-oim.jpg"
                     }
                     alt="userImage"
                     className="w-12 h-12 rounded-full object-cover"
@@ -103,7 +105,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     src={
                       forum?.forumImage
                         ? forum.forumImage
-                        : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
+                        : "https://cdn.rodasjeffrey.com/1754019117887-oim.jpg"
                     }
                     alt="forumImage"
                     className="w-12 h-12 rounded-full object-cover"
