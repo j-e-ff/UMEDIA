@@ -237,8 +237,10 @@ const MessagesPage = () => {
                       className="size-16 object-contain rounded-box"
                       src={user.photoURL}
                       alt={user.username}
+                      width={48}
+                      height={48}
                     />
-                    <div className="uppercase">
+                    <div className="">
                       <p className="text-base">{user.username}</p>
                       <p className="text-xs">{user.email}</p>
                     </div>
@@ -260,6 +262,8 @@ const MessagesPage = () => {
                       className="size-16 object-contain rounded-box"
                       src={user.photoURL}
                       alt={user.username}
+                      width={48}
+                      height={48}
                     />
                     <div className="lowercase">
                       <p className="text-base font-semibold">{user.username}</p>
@@ -280,6 +284,8 @@ const MessagesPage = () => {
                   className="size-16 object-contain rounded-box"
                   src={user.photoURL}
                   alt={user.username}
+                  width={48}
+                  height={48}
                 />
                 <p className="font-bold text-lg">{user.username}</p>
               </div>

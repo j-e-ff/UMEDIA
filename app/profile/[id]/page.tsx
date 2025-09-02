@@ -338,6 +338,8 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                           "https://cdn.rodasjeffrey.com/1754019117887-oim.jpg"
                         }
                         alt="avatar"
+                        fill
+                        className="object-cover rounded-full"
                       />
                     </div>
                   </div>
@@ -438,11 +440,14 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                             >
                               <div className="flex items-center gap-4 ">
-                                <Image
-                                  className="size-16 object-contain rounded-box"
-                                  src={user.photoURL}
-                                  alt={user.username}
-                                />
+                                <div className="size-16 relative">
+                                  <Image
+                                    className="object-cover rounded-box"
+                                    src={user.photoURL}
+                                    alt={user.username}
+                                    fill
+                                  />
+                                </div>
                                 <div>
                                   <p className="text-base">{user.username}</p>
                                   <p className="uppercase text-xs">
@@ -502,11 +507,14 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                             >
                               <div className="flex items-center gap-4 ">
-                                <Image
-                                  className="size-16 object-contain rounded-box"
-                                  src={forum.forumImage}
-                                  alt={forum.name}
-                                />
+                                <div className="size-16 relative">
+                                  <Image
+                                    className="object-cover rounded-box"
+                                    src={forum.forumImage}
+                                    alt={forum.name}
+                                    fill
+                                  />
+                                </div>
                                 <p className="text-base">{forum.name}</p>
                               </div>
                               {isAuthenticated && (

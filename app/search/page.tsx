@@ -138,6 +138,8 @@ const SearchPage = () => {
                           className="size-16 object-contain rounded-box"
                           src={user.photoURL}
                           alt={user.username}
+                          width={48}
+                          height={48}
                         />
                         <div>
                           <p className="text-base">{user.username}</p>
@@ -198,6 +200,8 @@ const SearchPage = () => {
                         className="size-16 object-contain rounded-box"
                         src={forum.forumImage}
                         alt={forum.name}
+                        width={48}
+                        height={48}
                       />
                       <p className="text-base">{forum.name}</p>
                     </div>

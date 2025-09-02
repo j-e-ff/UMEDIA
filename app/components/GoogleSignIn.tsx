@@ -122,7 +122,9 @@ const GoogleSignIn = () => {
                     user?.photoURL ||
                     "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
                   }
+                  fill
                   alt="User Avatar"
+                  className="object-cover rounded-full"
                 />
               </div>
             </div>

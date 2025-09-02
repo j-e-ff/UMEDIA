@@ -182,7 +182,7 @@ const PostPage = ({ params }: PostPageProps) => {
           <div className="bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl ">
             <div className="card-body h-24 overflow-y-auto ">
               <div className="card-title">
-                <div>
+                <div className="relative w-12 h-12">
                   <Image
                     src={
                       post.userImage
@@ -190,26 +190,30 @@ const PostPage = ({ params }: PostPageProps) => {
                         : "https://pub-3d7f192d5f3e48728c4bd513008aa127.r2.dev/1754019117887-oim.jpg"
                     }
                     alt="image"
-                    className="w-12 h-12 rounded-full object-cover"
+                    fill
+                    className="rounded-full object-cover"
                   />
                 </div>
                 <div className="flex flex-col ">
                   <p>
                     @{post.userName}: {post.title}
                   </p>
-                  <Link href={`/forum/${forum?.forumId}` } >
-                  <p className="block hover:text-info hover:underline">{forum && forum.name} </p>
+                  <Link href={`/forum/${forum?.forumId}`}>
+                    <p className="block hover:text-info hover:underline">
+                      {forum && forum.name}{" "}
+                    </p>
                   </Link>
                 </div>
               </div>
             </div>
             {post.photoUrls.length > 0 && (
               <figure className="px-6 pb-4 flex flex-col items-center ">
-                <div className=" h-130 flex items-center justify-center">
+                <div className=" h-130 flex items-center justify-center relative w-full">
                   <Image
                     key={currentImageIndex} // re-trigger transition on index change
                     src={post.photoUrls[currentImageIndex]}
                     alt={`Image ${currentImageIndex + 1}`}
+                    fill
                     className="w-180  h-full object-contain rounded-lg "
                   />
                 </div>
@@ -329,13 +333,16 @@ const PostPage = ({ params }: PostPageProps) => {
             <div className="px-6">
               {commentsList.map((comment) => (
                 <li key={comment.commentId} className="flex p-4">
-                  <div className="">
+                  <div>
                     <div className="flex items-center pb-4">
-                      <Image
-                        src={comment.userAvatar}
-                        alt="avatar"
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
+                      <div className=" relative w-12 h-12">
+                        <Image
+                          src={comment.userAvatar}
+                          alt="avatar"
+                          fill
+                          className=" rounded-full object-cover"
+                        />
+                      </div>
                       <div>
                         <p className="pl-2 text-lg">{comment.userName}</p>
                         <p className="text-xs pl-2">

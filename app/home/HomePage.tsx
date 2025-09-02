@@ -7,7 +7,7 @@ import { db } from "@/lib/firebase";
 
 const HomePage = () => {
   const { firestoreUser} = useAuth();
-  const [following, setFollowing] = useState([""]);
+  const [followingForum, setFollowingForum] = useState([""]);
 
   // useEffect for fetching followingForums
   useEffect(() => {
@@ -27,7 +27,7 @@ const HomePage = () => {
         const followingForums = querySnapshot.docs.map(
           (doc) => doc.id
         );
-        setFollowing(followingForums);
+        setFollowingForum(followingForums);
       } catch (error) {
         console.error("Failed to fetch following forums", error);
       }
@@ -35,7 +35,7 @@ const HomePage = () => {
     fetchFollowingForums();
   }, [firestoreUser]);
 
-  return <DisplayPost forumId={following} location="home" />;
+  return <DisplayPost forumId={followingForum} location="home" />;
 };
 
 export default HomePage;

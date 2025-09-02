@@ -118,7 +118,12 @@ const ForumPage = ({ params }: ForumPageProps) => {
                 <div className="flex flex-row">
                   <div className="avatar ">
                     <div className="w-22 rounded-full absolute -top-18">
-                      <Image src={forum.forumImage} alt="avatar" />
+                      <Image
+                        src={forum.forumImage}
+                        alt="avatar"
+                        width={88}
+                        height={88}
+                      />
                     </div>
                     <h1 className="text-2xl pt-8 wrap">{forum.name}</h1>
                   </div>

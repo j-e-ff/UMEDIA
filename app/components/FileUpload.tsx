@@ -109,7 +109,6 @@ const FileUpload = ({
           prev.map((f) => (f.id === fileId ? { ...f, progress: 100 } : f))
         );
 
-      
         const publicR2BaseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
         const publicUrl = `${publicR2BaseUrl}${encodeURIComponent(fileName)}`;
         // url used when custom domain created
@@ -223,6 +222,8 @@ const FileUpload = ({
                   <Image
                     src={file.url}
                     alt={file.name}
+                    width={320}
+                    height={240}
                     className="max-w-xs border rounded"
                     onError={(e) => {
                       console.error("Failed to load image");

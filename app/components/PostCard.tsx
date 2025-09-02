@@ -6,17 +6,16 @@ import { useAuth } from "../context/AuthContext";
 import { forumIdSearch } from "@/app/utils/forumIdSearch";
 import { likePost } from "@/app/utils/likePost";
 import { unlikePost } from "@/app/utils/unlikePost";
-import { collection, onSnapshot } from "firebase/firestore";
-
+import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 
 interface Post {
   description: string;
-  createdAt: Date;
+  createdAt: Timestamp;
   forumId: string;
   photoUrls: string[];
   postId: string;
   title: string;
-  updatedAt: Date;
+  updatedAt: Timestamp;
   userId: string;
   userName: string;
   userImage?: string;
@@ -85,30 +84,32 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <a href={`/post/${post.postId}`}>
             {post.forumId === "general" ? (
               <h2 className="card-title">
-                <div>
+                <div className="relative w-12 h-12">
                   <Image
                     src={
                       post.userImage
                         ? post.userImage
                         : "https://cdn.rodasjeffrey.com/1754019117887-oim.jpg"
                     }
+                    fill
                     alt="userImage"
-                    className="w-12 h-12 rounded-full object-cover"
+                    className=" rounded-full object-cover "
                   />
                 </div>
                 @{post.userName}: {post.title}
               </h2>
             ) : (
               <h2 className="card-title">
-                <div>
+                <div className="relative w-12 h-12">
                   <Image
                     src={
                       forum?.forumImage
                         ? forum.forumImage
                         : "https://cdn.rodasjeffrey.com/1754019117887-oim.jpg"
                     }
+                    fill
                     alt="forumImage"
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="rounded-full object-cover"
                   />
                 </div>
                 @{forum?.name}: {post.title}
@@ -146,6 +147,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   key={currentImageIndex} // re-trigger transition on index change
                   src={post.photoUrls[currentImageIndex]}
                   alt={`Image ${currentImageIndex + 1}`}
+                  width={720}
+                  height={520}
                   className="w-180 h-full object-contain rounded-lg "
                 />
               </div>
