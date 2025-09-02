@@ -134,13 +134,14 @@ const SearchPage = () => {
                       className="flex items-center justify-between cursor-pointer py-2 px-4  hover:bg-primary hover:text-primary-content"
                     >
                       <div className="flex items-center gap-4 ">
-                        <Image
-                          className="size-16 object-contain rounded-box"
-                          src={user.photoURL}
-                          alt={user.username}
-                          width={48}
-                          height={48}
-                        />
+                        <div className="w-16 h-16 relative">
+                          <Image
+                            className=" object-cover  rounded-box"
+                            src={user.photoURL}
+                            alt={user.username}
+                            fill
+                          />
+                        </div>
                         <div>
                           <p className="text-base">{user.username}</p>
                           <p className="uppercase text-xs">{user.email}</p>

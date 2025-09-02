@@ -232,14 +232,15 @@ const MessagesPage = () => {
                   className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-primary hover:cursor-pointer transition-colors"
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
-                  <div className="flex items-center gap-4">
-                    <Image
-                      className="size-16 object-contain rounded-box"
-                      src={user.photoURL}
-                      alt={user.username}
-                      width={48}
-                      height={48}
-                    />
+                  <div className="flex items-center gap-4 ">
+                    <div className="relative w-12 h-12">
+                      <Image
+                        className="size-12 object-cover rounded-box"
+                        src={user.photoURL}
+                        alt={user.username}
+                       fill
+                      />
+                    </div>
                     <div className="">
                       <p className="text-base">{user.username}</p>
                       <p className="text-xs">{user.email}</p>
@@ -258,13 +259,14 @@ const MessagesPage = () => {
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
                   <div className="flex items-center gap-4">
-                    <Image
-                      className="size-16 object-contain rounded-box"
-                      src={user.photoURL}
-                      alt={user.username}
-                      width={48}
-                      height={48}
-                    />
+                    <div className="relative w-12 h-12">
+                      <Image
+                        className="object-contain rounded-box"
+                        src={user.photoURL}
+                        alt={user.username}
+                        fill
+                      />
+                    </div>
                     <div className="lowercase">
                       <p className="text-base font-semibold">{user.username}</p>
                       <p className="text-xs wrap-anywhere">{user.email}</p>
@@ -280,13 +282,14 @@ const MessagesPage = () => {
           {user && (
             <div>
               <div className="flex flex-row gap-4 items-center">
-                <Image
-                  className="size-16 object-contain rounded-box"
-                  src={user.photoURL}
-                  alt={user.username}
-                  width={48}
-                  height={48}
-                />
+                <div className="relative w-16 h-16">
+                  <Image
+                    className="object-contain rounded-box"
+                    src={user.photoURL}
+                    alt={user.username}
+                    fill
+                  />
+                </div>
                 <p className="font-bold text-lg">{user.username}</p>
               </div>
             </div>
