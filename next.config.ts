@@ -24,7 +24,6 @@ const nextConfig = {
       },
     ],
   },
-  basePath: "/umedia"
 };
 
 export default nextConfig;
