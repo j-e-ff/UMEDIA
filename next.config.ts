@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   basePath: "/umedia",
-  assetPrefix: "https://www.rodasjeffrey.com/umedia", // using absolute URL
   images: {
     remotePatterns: [
       {
