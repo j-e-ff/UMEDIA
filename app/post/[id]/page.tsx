@@ -180,9 +180,9 @@ const PostPage = ({ params }: PostPageProps) => {
       {post && (
         <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full ">
           <div className="bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl ">
-            <div className="card-body h-24 overflow-y-auto ">
+            <div className="card-body h-24 xl:h-28">
               <div className="card-title">
-                <div className="relative w-12 h-12">
+                <div className="relative w-16 h-16 xl:w-20 xl:h-20">
                   <Image
                     src={
                       post.userImage
@@ -191,15 +191,15 @@ const PostPage = ({ params }: PostPageProps) => {
                     }
                     alt="image"
                     fill
-                    className="rounded-full object-cover"
+                    className="rounded-full object-cover xl:h-20 xl:w-20"
                   />
                 </div>
                 <div className="flex flex-col ">
-                  <p>
+                  <p className="xl:text-3xl">
                     @{post.userName}: {post.title}
                   </p>
                   <Link href={`/forum/${forum?.forumId}`}>
-                    <p className="block hover:text-info hover:underline">
+                    <p className="block hover:text-info hover:underline xl:text-2xl">
                       {forum && forum.name}{" "}
                     </p>
                   </Link>
@@ -208,13 +208,13 @@ const PostPage = ({ params }: PostPageProps) => {
             </div>
             {post.photoUrls.length > 0 && (
               <figure className="px-6 pb-4 flex flex-col items-center ">
-                <div className=" h-130 flex items-center justify-center relative w-full">
+                <div className=" h-180 xl:h-220 flex items-center justify-center relative w-full">
                   <Image
                     key={currentImageIndex} // re-trigger transition on index change
                     src={post.photoUrls[currentImageIndex]}
                     alt={`Image ${currentImageIndex + 1}`}
                     fill
-                    className="w-180  h-full object-contain rounded-lg "
+                    className="w-200 h-full object-contain rounded-lg "
                   />
                 </div>
                 <div className="flex justify-center mt-4 gap-8">
@@ -222,11 +222,11 @@ const PostPage = ({ params }: PostPageProps) => {
                     onClick={handlePrev}
                     disabled={currentImageIndex === 0 ? true : false}
                     hidden={post.photoUrls.length === 1}
-                    className="btn bt-sm rounded-2xl btn-secondary"
+                    className="btn bt-sm rounded-2xl btn-secondary xl:btn-lg"
                   >
                     prev
                   </button>
-                  <p className="text-xs mt-2">
+                  <p className="text-xs mt-2 xl:text-lg">
                     {currentImageIndex + 1} / {post.photoUrls.length}
                   </p>
                   <button
@@ -237,7 +237,7 @@ const PostPage = ({ params }: PostPageProps) => {
                         : false
                     }
                     hidden={post.photoUrls.length === 1}
-                    className="btn bt-sm rounded-2xl btn-secondary"
+                    className="btn bt-sm rounded-2xl btn-secondary xl:btn-lg"
                   >
                     next
                   </button>
@@ -245,7 +245,7 @@ const PostPage = ({ params }: PostPageProps) => {
               </figure>
             )}
             <div className="text-neutral-content px-6 pb-2">
-              <span>{post.description}</span>
+              <p className="xl:text-2xl">{post.description}</p>
             </div>
             <div className="flex gap-4 px-6 py-4">
               {/* Like button */}
@@ -257,7 +257,7 @@ const PostPage = ({ params }: PostPageProps) => {
                     likePost(firestoreUser!.uid, id);
                   }
                 }}
-                className="btn btn-primary rounded-2xl"
+                className="btn btn-primary rounded-2xl xl:btn-lg"
               >
                 <svg
                   className="size-[1.2em]"
@@ -275,11 +275,11 @@ const PostPage = ({ params }: PostPageProps) => {
                   </g>
                 </svg>
               </button>
-              <button className="btn btn-primary rounded-2xl">
+              <button className="btn btn-primary rounded-2xl xl:btn-lg">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="22"
+                  height="22"
                   fill="currentColor"
                   className="bi bi-hand-thumbs-down"
                   viewBox="0 0 16 16"
@@ -296,7 +296,7 @@ const PostPage = ({ params }: PostPageProps) => {
                       placeholder="Comment . . ."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      className="textarea textarea-secondary bg-neutral text-neutral-content w-full border-none focus:outline-none"
+                      className="textarea textarea-secondary bg-neutral text-neutral-content w-full border-none focus:outline-none xl:text-2xl"
                       autoFocus
                     />
                     <div className="flex gap-2 justify-end py-2">
@@ -305,7 +305,7 @@ const PostPage = ({ params }: PostPageProps) => {
                           setIsOpen(false);
                           setComment("");
                         }}
-                        className="btn btn-error btn-sm rounded-2xl "
+                        className="btn btn-error btn-sm rounded-2xl xl:btn-md"
                       >
                         cancel
                       </button>
@@ -314,7 +314,7 @@ const PostPage = ({ params }: PostPageProps) => {
                         onClick={() =>
                           submitComment(comment, firestoreUser, id)
                         }
-                        className="btn btn-success btn-sm rounded-2xl"
+                        className="btn btn-success btn-sm rounded-2xl xl:btn-md"
                       >
                         submit
                       </button>
@@ -322,7 +322,7 @@ const PostPage = ({ params }: PostPageProps) => {
                   </div>
                 ) : (
                   <button
-                    className="btn bg-neutral  text-neutral-content w-full rounded-3xl justify-start"
+                    className="btn bg-neutral text-neutral-content w-full rounded-3xl justify-start xl:btn-xl"
                     onClick={() => setIsOpen(true)}
                   >
                     Comment . . .
@@ -335,24 +335,24 @@ const PostPage = ({ params }: PostPageProps) => {
                 <li key={comment.commentId} className="flex p-4">
                   <div>
                     <div className="flex items-center pb-4">
-                      <div className=" relative w-12 h-12">
+                      <div className="relative w-12 h-12 xl:w-18 xl:h-18">
                         <Image
                           src={comment.userAvatar}
                           alt="avatar"
                           fill
-                          className=" rounded-full object-cover"
+                          className="rounded-full object-cover"
                         />
                       </div>
                       <div>
-                        <p className="pl-2 text-lg">{comment.userName}</p>
-                        <p className="text-xs pl-2">
+                        <p className="pl-2 text-lg xl:text-2xl">{comment.userName}</p>
+                        <p className="text-xs pl-2 xl:text-base">
                           {comment.createdAt
                             ? comment.createdAt.toDate().toLocaleString()
                             : "Loading..."}
                         </p>
                       </div>
                     </div>
-                    <p className="px-10">{comment.comment}</p>
+                    <p className="px-10 xl:text-xl">{comment.comment}</p>
                   </div>
                 </li>
               ))}

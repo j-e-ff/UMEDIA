@@ -52,6 +52,29 @@ const FileUpload = ({
     }
   }, [uploadedFiles, onFilesUploaded]);
 
+  // helper function for dynamic API URL
+  const getApiUrl = (endpoint: string) => {
+    if (typeof window !== "undefined") {
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+
+      const basePath = isLocalhost ? "" : "/umedia";
+      const fullUrl = `${basePath}/api${endpoint}`;
+
+      console.log("Hostname-based API URL:", {
+        hostname: window.location.hostname,
+        isLocalhost,
+        basePath,
+        fullUrl,
+      });
+
+      return fullUrl;
+    }
+
+    return `/umedia/api${endpoint}`;
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
@@ -80,7 +103,7 @@ const FileUpload = ({
         );
         // get presigned URL from backend
         const res = await fetch(
-          `/api/upload-url?fileName=${encodeURIComponent(
+          `${getApiUrl("/upload-url")}?fileName=${encodeURIComponent(
             file.name
           )}&fileType=${encodeURIComponent(file.type)}`
         );
@@ -152,7 +175,9 @@ const FileUpload = ({
     if (fileName) {
       try {
         const res = await fetch(
-          `/api/delete-file?fileName=${encodeURIComponent(fileName)}`,
+          `${getApiUrl("/delete-file")}?fileName=${encodeURIComponent(
+            fileName
+          )}`,
           {
             method: "DELETE",
           }

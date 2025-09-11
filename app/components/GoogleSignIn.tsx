@@ -12,6 +12,7 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
+import Link from "next/link";
 
 interface FirestoreUser {
   uid: string;
@@ -139,7 +140,7 @@ const GoogleSignIn = () => {
             className="menu dropdown-content menu-sm z-10 mt-3 w-45 rounded-2xl  p-2 shadow bg-primary text-primary-content"
           >
             <li>
-              <a href={`/profile/${firestoreUser?.uid}`}>Profile</a>
+              <Link href={`/profile/${firestoreUser?.uid}`}>Profile</Link>
             </li>
             <li onClick={handleLogout}>
               <a>Logout</a>

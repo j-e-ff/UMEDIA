@@ -135,38 +135,12 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
     }
   }
 
-  async function displayPost(displayType: string) {
-    if (displayType === "general") {
-      if (posts.length > 0) {
-        postsToDisplay.map((post) => (
-          <PostCard key={post.postId} post={post} />
-        ));
-      } else {
-        return (
-          <div>
-            <p>Follow users to see posts</p>
-          </div>
-        );
-      }
-    } else {
-      if (forumPosts.length > 0) {
-        postsToDisplay.map((post) => (
-          <PostCard key={post.postId} post={post} />
-        ));
-      } else {
-        <div>
-          <p>Follow forums to see posts</p>
-        </div>;
-      }
-    }
-  }
-
   return (
     <div className="font-sans flex flex-col items-center min-screen w-full gap-10 pb-20">
       {location === "home" && (
         <div className="join join-horizontal  ">
           <button
-            className={`btn join-item ${
+            className={`btn join-item xl:btn-lg ${
               displayType === "general"
                 ? "bg-primary text-primary-content"
                 : "bg-none"
@@ -179,7 +153,7 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
           </button>
           {forumPosts.length > 0 && (
             <button
-              className={`btn join-item ${
+              className={`btn join-item xl:btn-lg ${
                 displayType === "forums"
                   ? "bg-primary text-primary-content"
                   : "bg-none"
@@ -197,7 +171,11 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
       {displayType === "general" && postsToDisplay.length == 0 ? (
         <p>Follow Users to see posts</p>
       ) : (
-        postsToDisplay.map((post) => <PostCard key={post.postId} post={post} />)
+        <div className="grid grid-cols-1 gap-12 ">
+          {postsToDisplay.map((post) => (
+            <PostCard key={post.postId} post={post} />
+          ))}
+        </div>
       )}
     </div>
   );

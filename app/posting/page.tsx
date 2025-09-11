@@ -305,7 +305,7 @@ const Posting = () => {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 ml-20 xl:ml-64 lg:ml-20 md:ml-20 sm:ml-20 w-full max-w-none">
+      <div className="xl:text-2xl font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 ml-20 xl:ml-64 lg:ml-20 md:ml-20 sm:ml-20 w-full max-w-none">
         <div className="w-full max-w-4xl">
           <h1 className="mb-8 text-center">
             Create a new {forumToggle ? "forum" : "post"}
@@ -313,7 +313,7 @@ const Posting = () => {
 
           <div className="join join-horizontal flex justify-center">
             <button
-              className={`btn join-item ${
+              className={`btn join-item xl:btn-lg ${
                 forumToggle == false
                   ? "bg-primary text-primary-content "
                   : "bg-none "
@@ -325,7 +325,7 @@ const Posting = () => {
               Users
             </button>
             <button
-              className={`btn join-item ${
+              className={`btn join-item xl:btn-lg ${
                 forumToggle == true
                   ? "bg-primary text-primary-content"
                   : "bg-none"
@@ -340,7 +340,7 @@ const Posting = () => {
             </button>
           </div>
           {!forumToggle && (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 ">
               {/* Title Input */}
               <div>
                 <label
@@ -354,7 +354,7 @@ const Posting = () => {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="input input-secondary w-full max-w-full min-w-0"
+                  className="input input-secondary w-full max-w-full min-w-0 xl:input-lg"
                   placeholder="Enter your post title"
                   required
                 />
@@ -372,7 +372,7 @@ const Posting = () => {
                   id="forum"
                   value={forumId}
                   onChange={(e) => setForumId(e.target.value)}
-                  className="select select-secondary w-full max-w-full min-w-0"
+                  className="select select-secondary w-full max-w-full min-w-0 xl:input-lg"
                   required
                 >
                   <option value="general">General Discussion</option>
@@ -398,12 +398,12 @@ const Posting = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="description section"
-                  className="textarea textarea-secondary w-full"
+                  className="textarea textarea-secondary w-full xl:textarea-lg"
                   required
                 ></textarea>
               </div>
               <div>
-                <label className="block text-md font-medium mb-2">
+                <label className="block text-md font-medium mb-2 ">
                   Images (optional)
                 </label>
                 <FileUpload onFilesUploaded={handleFilesUploaded} />
@@ -413,7 +413,7 @@ const Posting = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn btn-success"
+                  className="btn btn-success xl:btn-lg"
                 >
                   {isSubmitting ? (
                     <>
@@ -422,7 +422,7 @@ const Posting = () => {
                       </span>
                     </>
                   ) : (
-                    "create Post"
+                    "create post"
                   )}
                 </button>
               </div>
@@ -433,7 +433,7 @@ const Posting = () => {
               <div>
                 <label
                   htmlFor="Name"
-                  className="block text-md font-medium mb-2"
+                  className="block text-md font-medium mb-2 "
                 >
                   Name *
                 </label>
@@ -442,7 +442,7 @@ const Posting = () => {
                   id="Name"
                   value={forumName}
                   onChange={(e) => setForumName(e.target.value)}
-                  className="input input-secondary w-full max-w-full min-w-0"
+                  className="input input-secondary w-full max-w-full min-w-0 xl:input-lg"
                   placeholder="Enter forum name"
                   required
                 />
@@ -459,7 +459,7 @@ const Posting = () => {
                   id="Description"
                   value={forumDesc}
                   onChange={(e) => setForumDesc(e.target.value)}
-                  className="input input-secondary w-full max-w-full min-w-0"
+                  className="input input-secondary w-full max-w-full min-w-0 xl:input-lg"
                   placeholder="Enter forum description"
                   required
                 />
@@ -495,16 +495,16 @@ const Posting = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn btn-success"
+                  className="btn btn-success xl:btn-lg"
                 >
                   {isSubmitting ? (
                     <>
                       <span className="loading loading-spinner loading-sm text-secondary">
-                        creating Forum
+                        creating forum
                       </span>
                     </>
                   ) : (
-                    "create Forum"
+                    "create forum"
                   )}
                 </button>
               </div>

@@ -63,9 +63,9 @@ const SearchPage = () => {
   return (
     <div className="flex flex-row ml-20 min-h-screen ">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen ml-2 pt-20 w-full">
-        <h1 className="mb-8">SEARCH PAGE</h1>
-        <label className="input">
+      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen ml-2 pt-20 w-full xl:ml-43">
+        <h1 className="pb-15 xl:text-lg">SEARCH PAGE</h1>
+        <label className="input xl:input-lg xl:w-120">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +95,7 @@ const SearchPage = () => {
           <div className=" font-sans flex flex-col items-center justify-items-center min-h-screen ml-2 pt-10 w-full">
             <div className="join join-horizontal pb-10 ml-2">
               <button
-                className={`btn join-item ${
+                className={`btn join-item xl:btn-lg ${
                   searchType === "Users"
                     ? "bg-primary text-primary-content"
                     : "bg-none"
@@ -107,7 +107,7 @@ const SearchPage = () => {
                 Users
               </button>
               <button
-                className={`btn join-item ${
+                className={`btn join-item xl:btn-lg ${
                   searchType === "Forums"
                     ? "bg-primary text-primary-content"
                     : "bg-none"
@@ -120,31 +120,30 @@ const SearchPage = () => {
               </button>
             </div>
             {searchType === "Users" && (
-              <div className="">
-                <ul className="list w-full md:w-130 lg:w-190 xl:w-200 rounded-2xl shadow-md bg-base-200">
-                  <li className="p-4 pb-2 text-xs tracking-wide">
+                <ul className="list w-full md:w-130 lg:w-190 xl:w-220 rounded-2xl shadow-md bg-base-200">
+                  <li className="p-4 pb-2 tracking-wide xl:text-2xl">
                     List of all users
                   </li>
                   {users.map((user) => (
                     <li
                       key={user.id}
                       onClick={() =>
-                        (window.location.href = `/profile/${user.id}`)
+                        (window.location.href = `profile/${user.id}`)
                       } // whole row navigates
-                      className="flex items-center justify-between cursor-pointer py-2 px-4  hover:bg-primary hover:text-primary-content"
+                      className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                     >
-                      <div className="flex items-center gap-4 ">
-                        <div className="w-16 h-16 relative">
+                      <div className="flex items-center gap-4">
+                        <div className="pr-15 w-16 h-16 xl:w-22 xl:h-22 relative ">
                           <Image
-                            className=" object-cover  rounded-box"
+                            className="size-16 xl:size-22 object-cover rounded-box"
                             src={user.photoURL}
                             alt={user.username}
                             fill
                           />
                         </div>
                         <div>
-                          <p className="text-base">{user.username}</p>
-                          <p className="uppercase text-xs">{user.email}</p>
+                          <p className="text-base xl:text-2xl wrap-anywhere">{user.username}</p>
+                          <p className="uppercase text-lg xl:text-lg wrap-anywhere">{user.email}</p>
                         </div>
                       </div>
                       {isAuthenticated && firestoreUser?.uid !== user.id && (
@@ -157,7 +156,7 @@ const SearchPage = () => {
                                 : followUser(firestoreUser.uid, user.id);
                             }
                           }}
-                          className="btn btn-circle ml-16 bg-transparent border-none"
+                          className="btn btn-circle xl:btn-lg ml-16 bg-transparent border-none"
                         >
                           <svg
                             className="size-[1.2em] hover:size-[1.7em]"
@@ -181,30 +180,30 @@ const SearchPage = () => {
                     </li>
                   ))}
                 </ul>
-              </div>
+             
             )}
             {searchType === "Forums" && (
-              <ul className="list w-full md:w-130 lg:w-190 xl:w-200 rounded-2xl shadow-md bg-base-200">
-                <li className="p-4 pb-2 text-xs tracking-wide">
+              <ul className="list w-full md:w-130 lg:w-190 xl:w-220 rounded-2xl shadow-md bg-base-200">
+                <li className="p-4 pb-2 xl:text-2xl tracking-wide">
                   List of all forums
                 </li>
                 {forums.map((forum) => (
                   <li
                     key={forum.forumId}
                     onClick={() =>
-                      (window.location.href = `/forum/${forum.forumId}`)
+                      (window.location.href = `forum/${forum.forumId}`)
                     } // whole row navigates
                     className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
                   >
                     <div className="flex items-center gap-4">
                       <Image
-                        className="size-16 object-contain rounded-box"
+                        className="size-16 xl:size-22 object-cover rounded-box"
                         src={forum.forumImage}
                         alt={forum.name}
                         width={48}
                         height={48}
                       />
-                      <p className="text-base">{forum.name}</p>
+                      <p className="text-base xl:text-2xl">{forum.name}</p>
                     </div>
 
                     {isAuthenticated && (
@@ -217,7 +216,7 @@ const SearchPage = () => {
                               : followForum(firestoreUser.uid, forum);
                           }
                         }}
-                        className="btn btn-circle ml-16 bg-transparent border-none"
+                        className="btn btn-circle xl:btn-lg ml-16 bg-transparent border-none"
                       >
                         <svg
                           className="size-[1.2em] hover:size-[1.9em] "

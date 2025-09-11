@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: "/umedia",
+  
+  output: "standalone",
+
   images: {
     remotePatterns: [
       {

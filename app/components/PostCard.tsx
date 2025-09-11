@@ -79,12 +79,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <div>
-      <div className="h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl ">
-        <div className="card-body h-24 overflow-y-auto ">
-          <a href={`/post/${post.postId}`}>
+      <div className="h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl">
+        <div className="card-body h-24 xl:h-28">
+          <a href={`/umedia/post/${post.postId}`}>
             {post.forumId === "general" ? (
-              <h2 className="card-title">
-                <div className="relative w-12 h-12">
+              <h2 className="card-title xl:text-2xl">
+                <div className="relative w-12 h-12 xl:w-16 xl:h-16">
                   <Image
                     src={
                       post.userImage
@@ -93,14 +93,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     }
                     fill
                     alt="userImage"
-                    className=" rounded-full object-cover "
+                    className=" rounded-full object-cover"
                   />
                 </div>
                 @{post.userName}: {post.title}
               </h2>
             ) : (
-              <h2 className="card-title">
-                <div className="relative w-12 h-12">
+              <h2 className="card-title xl:text-2xl">
+                <div className="relative w-12 h-12 xl:w-16 xl:h-16">
                   <Image
                     src={
                       forum?.forumImage
@@ -141,15 +141,15 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 />
               </svg>
             </button>
-            <figure className="px-6 pb-4 flex flex-col items-center ">
-              <div className=" h-130 flex items-center justify-center">
+            <figure className="px-6  flex flex-col items-center ">
+              <div className="h-130 xl:h-210 flex items-center justify-center">
                 <Image
                   key={currentImageIndex} // re-trigger transition on index change
                   src={post.photoUrls[currentImageIndex]}
                   alt={`Image ${currentImageIndex + 1}`}
                   width={720}
                   height={520}
-                  className="w-180 h-full object-contain rounded-lg "
+                  className="w-180 h-full xl:w-280 xl:h-200 object-contain rounded-lg "
                 />
               </div>
               <p className="text-xs mt-2">
@@ -181,7 +181,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             </button>
           </div>
         )}
-
+        {!(post.photoUrls.length > 0) && (
+          <div className="w-full ">
+            <div className="px-8"><p className="xl:text-xl">{post.description}</p></div>
+          </div>
+        )}
         <div className="flex justify-start p-4">
           {/* Like Button */}
           <button
@@ -211,7 +215,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             </svg>
           </button>
           {/* Comment Button */}
-          <Link href={`/post/${post.postId}`} passHref>
+          <Link href={`umedia/post/${post.postId}`} passHref>
             <button className="btn btn-neutral bg-red rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
