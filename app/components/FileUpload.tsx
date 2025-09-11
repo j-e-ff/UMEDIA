@@ -59,13 +59,13 @@ const FileUpload = ({
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1";
 
-      const basePath = isLocalhost ? "" : "/umedia";
-      const fullUrl = `${basePath}/api${endpoint}`;
+      // const basePath = isLocalhost ? "" : "/umedia";
+      const fullUrl = `/api${endpoint}`;
 
       console.log("Hostname-based API URL:", {
         hostname: window.location.hostname,
         isLocalhost,
-        basePath,
+        // basePath,
         fullUrl,
       });
 
