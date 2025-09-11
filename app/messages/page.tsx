@@ -279,7 +279,7 @@ const MessagesPage = () => {
               {users.map((user) => (
                 <li
                   key={user.id}
-                  className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-primary hover:cursor-pointer transition-colors"
+                  className="flex items-center justify-between pt-4 pb-4 px-2 rounded-lg hover:bg-primary hover:cursor-pointer transition-colors"
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
                   <div className="flex items-center gap-4 ">
@@ -293,7 +293,6 @@ const MessagesPage = () => {
                     </div>
                     <div className="">
                       <p className="text-base font-semibold xl:text-lg">{user.username}</p>
-                      <p className="text-xs wrap-anywhere xl:text-lg">{user.email}</p>
                     </div>
                   </div>
                 </li>
@@ -309,7 +308,7 @@ const MessagesPage = () => {
                   onClick={() => messageUser(firestoreUser!.uid, user)}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="relative w-12 h-12 xl:w-20 xl:h-20">
+                    <div className="relative w-12 h-12 xl:w-20 xl:h-20 ">
                       <Image
                         className="object-cover rounded-box"
                         src={user.photoURL}
@@ -340,7 +339,7 @@ const MessagesPage = () => {
                     fill
                   />
                 </div>
-                <p className="font-bold text-lg xl:text-4xl">{user.username}</p>
+                <p className="font-bold text-lg xl:text-2xl 2xl:text-3xl">{user.username}</p>
               </div>
             </div>
           )}
@@ -354,7 +353,7 @@ const MessagesPage = () => {
           )}
           <div className="divider divider-vertical divider-accent pr-8"></div>
           {user && (
-            <div className="pr-8 relative h-full pb-44">
+            <div className="pr-8 relative h-full pb-44 xl:pb-50 ">
               <div className="flex flex-col gap-2 h-full overflow-y-auto pr-2">
                 {messages.map((msg) => (
                   <div
@@ -365,7 +364,7 @@ const MessagesPage = () => {
                         : "bg-neutral text-neutral-content"
                     }`}
                   >
-                    <p className="text-base xl:text-2xl">{msg.text}</p>
+                    <p className="text-base xl:text-lg 2xl:text-2xl">{msg.text}</p>
                     <span className="text-xs opacity-70 xl:text-base">
                       {msg.createdAt
                         ? msg.createdAt.toDate().toLocaleTimeString([], {
@@ -380,11 +379,11 @@ const MessagesPage = () => {
                 ))}
                 <div ref={messageEndRef} />
               </div>
-              <div className="absolute bottom-30 w-full pr-8 xl:bottom-40">
+              <div className="absolute bottom-35 w-full pr-8 2xl:bottom-35 md:bottom-30 xl:bottom-35 ">
                 <input
                   type="text"
                   placeholder="Message..."
-                  className="grow input input-secondary w-full xl:input-xl"
+                  className="grow input input-secondary w-full xl:input-lg 2xl:input-xl"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
