@@ -40,8 +40,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [forum, setForum] = useState<Forum | null>();
-  const testpost = post;
-  console.log("testPost", testpost);
+  const [fetchedForum, setFetchedForum] = useState(false);
+ 
 
   const handleNext = () => {
     setCurrentImageIndex((prev) => (prev = prev + 1));
@@ -56,6 +56,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     const fetchForum = async () => {
       if (post.forumId && post.forumId != "general") {
         setForum(await forumIdSearch(post.forumId));
+        setFetchedForum(true);
       } else {
         setForum(null);
       }
@@ -77,40 +78,41 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     return () => unsubscribe();
   }, [post, firestoreUser]);
 
+  if (post.forumId != "general" && fetchedForum == false) return(
+    <div><span className="loading loading-spinner loading-xl"></span></div>
+  )
+
   return (
     <div>
       <div className="h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl">
         <div className="card-body h-24 xl:h-28">
-          <a href={`/umedia/post/${post.postId}`}>
+          <a href={`/post/${post.postId}`}>
             {post.forumId === "general" ? (
               <h2 className="card-title xl:text-2xl">
                 <div className="relative w-12 h-12 xl:w-16 xl:h-16">
-                  <Image
-                    src={
-                      post.userImage
-                        ? post.userImage
-                        : "https://cdn.rodasjeffrey.com/1754019117887-oim.jpg"
-                    }
-                    fill
-                    alt="userImage"
-                    className=" rounded-full object-cover"
-                  />
+                  {post.userImage && (
+                    <Image
+                      src={post.userImage}
+                      fill
+                      alt="userImage"
+                      className=" rounded-full object-cover"
+                    />
+                  )}
                 </div>
                 @{post.userName}: {post.title}
               </h2>
             ) : (
               <h2 className="card-title xl:text-2xl">
                 <div className="relative w-12 h-12 xl:w-16 xl:h-16">
-                  <Image
-                    src={
-                      forum?.forumImage
-                        ? forum.forumImage
-                        : "https://cdn.rodasjeffrey.com/1754019117887-oim.jpg"
-                    }
-                    fill
-                    alt="forumImage"
-                    className="rounded-full object-cover"
-                  />
+                  {forum?.forumImage && (
+                    <Image
+                      src={forum.forumImage}
+                      fill
+                      alt="forumImage"
+                      className="rounded-full object-cover"
+                      loading="eager"
+                    />
+                  )}
                 </div>
                 @{forum?.name}: {post.title}
               </h2>
@@ -150,6 +152,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   width={720}
                   height={520}
                   className="w-180 h-full xl:w-280 xl:h-200 object-contain rounded-lg "
+                  loading="eager"
                 />
               </div>
               <p className="text-xs mt-2">
@@ -183,7 +186,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         )}
         {!(post.photoUrls.length > 0) && (
           <div className="w-full ">
-            <div className="px-8"><p className="xl:text-xl">{post.description}</p></div>
+            <div className="px-8">
+              <p className="xl:text-xl">{post.description}</p>
+            </div>
           </div>
         )}
         <div className="flex justify-start p-4">
@@ -215,7 +220,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             </svg>
           </button>
           {/* Comment Button */}
-          <Link href={`umedia/post/${post.postId}`} passHref>
+          <Link href={`/post/${post.postId}`} passHref>
             <button className="btn btn-neutral bg-red rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

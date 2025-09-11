@@ -55,13 +55,14 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
           // query for general posts from followed users only
           if (followingUserIds.length > 0) {
             // firebase limits to 30 values
-            const batchSize = 30;
+            const batchSize = 29;
             for (let i = 0; i < followingUserIds.length; i += batchSize) {
               const batch = followingUserIds.slice(i, i + batchSize);
+              const batchWithUser = [...batch,firestoreUser.uid]
               const generalPostsFromFollowedQuery = query(
                 collection(db, "posts"),
                 where("forumId", "==", "general"),
-                where("userId", "in", batch),
+                where("userId", "in", batchWithUser),
                 orderBy("createdAt", "desc")
               );
               promises.push(getDocs(generalPostsFromFollowedQuery));
