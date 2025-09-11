@@ -346,19 +346,34 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                   <h1 className="text-2xl pt-8 wrap">{profileUser.username}</h1>
                   <div className="ml-auto pr-4 ">
                     {itsOwnProfile && !editToggle && (
-                      <button
-                        className="btn btn-primary rounded-full "
-                        onClick={() => {
-                          const modal = document.getElementById(
-                            "following"
-                          ) as HTMLDialogElement | null;
-                          if (modal) modal.showModal();
-                          fetchUsersByIds(followingUserIdList);
-                          fetchForumsByIds(followingForumsList);
-                        }}
-                      >
-                        check following
-                      </button>
+                      <div className="flex flex-row gap-2">
+                        <button
+                          className="btn btn-ghost rounded-full bg-transparent hover:btn-link 2xl:btn-lg"
+                          onClick={() => {
+                            const modal = document.getElementById(
+                              "following"
+                            ) as HTMLDialogElement | null;
+                            if (modal) modal.showModal();
+                            fetchUsersByIds(followingUserIdList);
+                            fetchForumsByIds(followingForumsList);
+                          }}
+                        >
+                          following
+                        </button>
+                        <button
+                          className="btn btn-ghost rounded-full bg-transparent hover:btn-link 2xl:btn-lg"
+                          onClick={() => {
+                            const modal = document.getElementById(
+                              "followers"
+                            ) as HTMLDialogElement | null;
+                            if (modal) modal.showModal();
+                            fetchUsersByIds(followingUserIdList);
+                            fetchForumsByIds(followingForumsList);
+                          }}
+                        >
+                          followers
+                        </button>
+                      </div>
                     )}
                     {isAuthenticated && !editToggle && !itsOwnProfile && (
                       <button
@@ -390,18 +405,24 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                     )}
                   </div>
                   <dialog id="following" className="modal">
-                    <div className="modal-box w-11/12 max-w-2xl">
+                    <div className="modal-box w-11/12 max-w-4xl">
                       <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 2xl:btn-lg">
                           ✕
                         </button>
                       </form>
-                      <h3 className="font-bold text-lg ">Following</h3>
+                      <p className="font-bold text-lg 2xl:text-2xl">
+                        {displayType} (
+                        {displayType === "Users"
+                          ? following.length
+                          : followingForumsList.length}
+                        )
+                      </p>
                       {/* Buttons */}
                       <div className="join join-horizontal flex justify-center my-4">
                         <button
-                          className={`btn join-item ${
+                          className={`btn join-item xl:btn-lg ${
                             displayType === "Users"
                               ? "bg-primary text-primary-content"
                               : "bg-none"
@@ -413,7 +434,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                           Users
                         </button>
                         <button
-                          className={`btn join-item ${
+                          className={`btn join-item xl:btn-lg ${
                             displayType === "Forums"
                               ? "bg-primary text-primary-content"
                               : "bg-none"
@@ -425,10 +446,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                           Forums
                         </button>
                       </div>
-                      <ul className="list w-full rounded-2xl shadow-md bg-base-200">
-                        <li className="p-4 pb-2 text-xs tracking-wide">
-                          Followed{" "}
-                          {displayType === "Users" ? "Users" : "Forums"}
+                      <ul className="list w-full rounded-2xl shadow-md bg-base-200 ">
+                        <li className="p-4 pb-2 text-xs tracking-wide 2xl:text-base">
+                          Followed {displayType}
                         </li>
                         {displayType === "Users" &&
                           userList.map((user) => (
@@ -437,10 +457,10 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               onClick={() =>
                                 (window.location.href = `/profile/${user.id}`)
                               } // whole row navigates
-                              className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
+                              className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-secondary hover:text-secondary-content "
                             >
                               <div className="flex items-center gap-4 ">
-                                <div className="size-16 relative">
+                                <div className="size-16 relative 2xl:size-22">
                                   <Image
                                     className="object-cover rounded-box"
                                     src={user.photoURL}
@@ -449,8 +469,8 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                   />
                                 </div>
                                 <div>
-                                  <p className="text-base">{user.username}</p>
-                                  <p className="uppercase text-xs">
+                                  <p className="text-base 2xl:text-2xl">{user.username}</p>
+                                  <p className="uppercase text-xs 2xl:text-sm">
                                     {user.email}
                                   </p>
                                 </div>
@@ -472,7 +492,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                             );
                                       }
                                     }}
-                                    className="btn btn-circle bg-transparent border-none "
+                                    className="btn btn-circle bg-transparent border-none 2xl:btn-lg "
                                   >
                                     <svg
                                       className="size-[1.2em] hover:size-[1.7em]"
@@ -504,10 +524,10 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               onClick={() =>
                                 (window.location.href = `/forum/${forum.forumId}`)
                               } //entire row navigates
-                              className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
+                              className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-secondary hover:text-secondary-content"
                             >
                               <div className="flex items-center gap-4 ">
-                                <div className="size-16 relative">
+                                <div className="size-16 relative 2xl:size-22">
                                   <Image
                                     className="object-cover rounded-box"
                                     src={forum.forumImage}
@@ -515,7 +535,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                     fill
                                   />
                                 </div>
-                                <p className="text-base">{forum.name}</p>
+                                <p className="text-base 2xl:text-2xl">{forum.name}</p>
                               </div>
                               {isAuthenticated && (
                                 <button
@@ -530,7 +550,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                         : followForum(firestoreUser.uid, forum);
                                     }
                                   }}
-                                  className="btn btn-circle ml-16 bg-transparent border-none"
+                                  className="btn btn-circle ml-16 bg-transparent border-none 2xl:btn-lg"
                                 >
                                   <svg
                                     className="size-[1.2em] hover:size-[1.9em] "
@@ -555,6 +575,92 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               )}
                             </li>
                           ))}
+                      </ul>
+                    </div>
+                    <form method="dialog" className="modal-backdrop">
+                      <button >close</button>
+                    </form>
+                  </dialog>
+                  {/*  */}
+                  {/* followers modal */}
+                  <dialog id="followers" className="modal">
+                    <div className="modal-box w-11/12 max-w-4xl">
+                      <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                          ✕
+                        </button>
+                      </form>
+                      <h3 className="font-bold text-lg pb-4 2xl:text-2xl">
+                        Followers
+                      </h3>
+                      <ul className="list w-full rounded-2xl shadow-md bg-base-200">
+                        {userList.map((user) => (
+                          <li
+                            key={user.id}
+                            onClick={() =>
+                              (window.location.href = `/profile/${user.id}`)
+                            } // whole row navigates
+                            className="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-primary hover:text-primary-content"
+                          >
+                            <div className="flex items-center gap-4 ">
+                              <div className="size-16 relative 2xl:size-22">
+                                <Image
+                                  className="object-cover rounded-box"
+                                  src={user.photoURL}
+                                  alt={user.username}
+                                  fill
+                                />
+                              </div>
+                              <div>
+                                <p className="text-base 2xl:text-2xl">{user.username}</p>
+                                <p className="uppercase text-xs 2xl:text-base">
+                                  {user.email}
+                                </p>
+                              </div>
+                            </div>
+                            {isAuthenticated &&
+                              firestoreUser?.uid !== user.id && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (firestoreUser?.uid) {
+                                      following.includes(user.id)
+                                        ? unfollowUser(
+                                            firestoreUser.uid,
+                                            user.id
+                                          )
+                                        : followUser(
+                                            firestoreUser.uid,
+                                            user.id
+                                          );
+                                    }
+                                  }}
+                                  className="btn btn-circle bg-transparent border-none 2xl:btn-lg"
+                                >
+                                  <svg
+                                    className="size-[1.2em] hover:size-[1.7em]"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <g
+                                      strokeLinejoin="round"
+                                      strokeLinecap="round"
+                                      strokeWidth="2"
+                                      fill={
+                                        following.includes(user.id)
+                                          ? "red"
+                                          : "none"
+                                      }
+                                      stroke="currentColor"
+                                    >
+                                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </g>
+                                  </svg>
+                                </button>
+                              )}
+                          </li>
+                        ))}
                       </ul>
                     </div>
                     <form method="dialog" className="modal-backdrop">
