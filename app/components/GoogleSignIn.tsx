@@ -113,7 +113,7 @@ const GoogleSignIn = () => {
           <div
             tabIndex={0}
             role="button"
-            className="card sm:w-16 md:w-16 lg:w-16 xl:w-45  shadow flex flex-row items-center gap-4 p-2 cursor-pointer rounded-full bg-primary "
+            className="card sm:w-16 md:w-16 lg:w-16 xl:w-45 2xl:w-55 shadow flex flex-row items-center gap-4 p-2 cursor-pointer rounded-full bg-primary "
           >
             <div className="avatar">
               <div className="w-12 rounded-full">
@@ -130,20 +130,22 @@ const GoogleSignIn = () => {
               </div>
             </div>
             <div>
-              <p className="card-title text-xs hidden xl:inline text-primary-content">
+              <p className="card-title text-sm hidden xl:inline text-primary-content 2xl:text-base">
                 {firestoreUser?.username}
               </p>
             </div>
           </div>
           <ul
             tabIndex={0}
-            className="menu dropdown-content menu-sm z-10 mt-3 w-45 rounded-2xl  p-2 shadow bg-primary text-primary-content"
+            className="menu dropdown-content menu-sm z-10 mt-3 w-45 rounded-2xl p-2 shadow bg-primary text-primary-content
+            2xl:menu-md 2xl:w-55 
+            "
           >
             <li>
-              <Link href={`/profile/${firestoreUser?.uid}`}>Profile</Link>
+              <Link href={`/profile/${firestoreUser?.uid}`}><p className="2xl:text-lg">Profile</p></Link>
             </li>
             <li onClick={handleLogout}>
-              <a>Logout</a>
+              <a className="2xl:text-lg">Logout</a>
             </li>
           </ul>
         </div>

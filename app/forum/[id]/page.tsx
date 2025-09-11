@@ -125,7 +125,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
                         height={88}
                       />
                     </div>
-                    <h1 className="text-2xl pt-8 wrap">{forum.name}</h1>
+                    <h1 className="text-2xl pt-8 wrap xl:text-3xl">{forum.name}</h1>
                   </div>
                   {isAuthenticated && (
                     <button
@@ -134,7 +134,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
                           ? unfollowForum()
                           : followForum()
                       }
-                      className="btn btn-circle ml-auto mr-12 bg-transparent border-none"
+                      className="btn btn-circle ml-auto mr-12 bg-transparent border-none xl:btn-xl"
                     >
                       <svg
                         className="size-[1.2em]"
@@ -158,7 +158,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
                     </button>
                   )}
                 </div>
-                <div>{forum.description}</div>
+                <div><p className="xl:text-xl">{forum.description}</p></div>
                 <DisplayPost forumId={[forum.forumId]} location="forum" />
               </div>
             </div>
