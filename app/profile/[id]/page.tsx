@@ -21,6 +21,7 @@ import {
 } from "firebase/firestore";
 
 import FileUpload from "../../components/FileUpload";
+import { useFollowers } from "@/app/hooks/useFollowers";
 
 interface User {
   id: string;
@@ -87,10 +88,12 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
   // varibale for storing the following users as User objects
   const [userList, setUserList] = useState<User[]>([]);
   const [forumsList, setForumsList] = useState<Forum[]>([]);
+  const [followersList, setFollowersList] = useState<User[]>([]);
   // getting the list of users in the usbcollection (ids are returned a string array)
   const followingUserIdList = useFollowingUsers();
   const followingForumsList = useFollowingForums();
   const following = useFollowingUsers();
+  const followers = useFollowers();
 
   //   check if its the current user's profile
   const itsOwnProfile = user?.uid === id;
@@ -151,6 +154,23 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
       });
     }
     setUserList(results);
+  };
+
+  const fetchFollowersByIds = async (userIds: string[]) => {
+    const chunks = [];
+    for (let i = 0; i < userIds.length; i += 30) {
+      chunks.push(userIds.slice(i, i + 30));
+    }
+
+    const results: User[] = [];
+    for (const chunk of chunks) {
+      const q = query(collection(db, "users"), where("__name__", "in", chunk));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((docSnap) => {
+        results.push({ id: docSnap.id, ...docSnap.data() } as User);
+      });
+    }
+    setFollowersList(results);
   };
 
   const fetchForumsByIds = async (forums: ForumHook[]) => {
@@ -358,7 +378,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                             fetchForumsByIds(followingForumsList);
                           }}
                         >
-                          following
+                          {following.length} following
                         </button>
                         <button
                           className="btn btn-ghost rounded-full bg-transparent hover:btn-link 2xl:btn-lg"
@@ -367,11 +387,10 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                               "followers"
                             ) as HTMLDialogElement | null;
                             if (modal) modal.showModal();
-                            fetchUsersByIds(followingUserIdList);
-                            fetchForumsByIds(followingForumsList);
+                            fetchFollowersByIds(followers);
                           }}
                         >
-                          followers
+                          {followers.length} followers
                         </button>
                       </div>
                     )}
@@ -469,7 +488,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                   />
                                 </div>
                                 <div>
-                                  <p className="text-base 2xl:text-2xl">{user.username}</p>
+                                  <p className="text-base 2xl:text-2xl">
+                                    {user.username}
+                                  </p>
                                   <p className="uppercase text-xs 2xl:text-sm">
                                     {user.email}
                                   </p>
@@ -535,7 +556,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                     fill
                                   />
                                 </div>
-                                <p className="text-base 2xl:text-2xl">{forum.name}</p>
+                                <p className="text-base 2xl:text-2xl">
+                                  {forum.name}
+                                </p>
                               </div>
                               {isAuthenticated && (
                                 <button
@@ -578,7 +601,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                       </ul>
                     </div>
                     <form method="dialog" className="modal-backdrop">
-                      <button >close</button>
+                      <button>close</button>
                     </form>
                   </dialog>
                   {/*  */}
@@ -595,7 +618,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                         Followers
                       </h3>
                       <ul className="list w-full rounded-2xl shadow-md bg-base-200">
-                        {userList.map((user) => (
+                        {followersList.map((user) => (
                           <li
                             key={user.id}
                             onClick={() =>
@@ -613,7 +636,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                                 />
                               </div>
                               <div>
-                                <p className="text-base 2xl:text-2xl">{user.username}</p>
+                                <p className="text-base 2xl:text-2xl">
+                                  {user.username}
+                                </p>
                                 <p className="uppercase text-xs 2xl:text-base">
                                   {user.email}
                                 </p>
