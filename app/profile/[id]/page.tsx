@@ -2,6 +2,7 @@
 import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
 import Navbar from "../../components/Navbar";
+import PostCard from "@/app/components/PostCard";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import { useFollowingForums } from "@/app/hooks/useFollowingForums";
@@ -15,9 +16,11 @@ import {
   doc,
   getDocs,
   onSnapshot,
+  orderBy,
   query,
   setDoc,
   where,
+  Timestamp,
 } from "firebase/firestore";
 
 import FileUpload from "../../components/FileUpload";
@@ -66,6 +69,18 @@ interface ProfilePageProps {
   }>;
 }
 
+interface Post {
+  description: string;
+  createdAt: Timestamp;
+  forumId: string;
+  photoUrls: string[];
+  postId: string;
+  title: string;
+  updatedAt: Timestamp;
+  userId: string;
+  userName: string;
+}
+
 const UsersProfile = ({ params }: ProfilePageProps) => {
   const { id } = use(params);
   const { user, firestoreUser, loading, isAuthenticated } = useAuth();
@@ -97,6 +112,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
 
   //   check if its the current user's profile
   const itsOwnProfile = user?.uid === id;
+
+  // posts
+  const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -137,6 +155,29 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
       }
     );
     return () => unsubscribe();
+  }, [firestoreUser?.uid]);
+
+  // fetching all user's posts
+  useEffect(() => {
+    const fetchUserPosts = async () => {
+      try {
+        const q = query(
+          collection(db, "posts"),
+          where("userId", "==", firestoreUser?.uid),
+          orderBy("createdAt", "desc")
+        );
+        const querySnapshot = await getDocs(q);
+        const postList: Post[] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Post),
+        }));
+        setPosts(postList);
+        console.log(postList);
+      } catch (error) {
+        console.error("failed to fetch user posts:", error);
+      }
+    };
+    fetchUserPosts();
   }, [firestoreUser?.uid]);
 
   const fetchUsersByIds = async (userIds: string[]) => {
@@ -322,8 +363,8 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
       <Navbar />
       <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full ">
         <div>
-          <div className="hero">
-            <div className="hero-content flex-col w-full bg-base-300 rounded-2xl">
+          <div className="hero w-full">
+            <div className="hero-content w-full flex-col bg-base-300 rounded-2xl">
               {/* Cover Image */}
               <div
                 className="w-full h-80 bg-cover object-cover bg-center relative rounded-xl"
@@ -392,6 +433,14 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                         >
                           {followers.length} followers
                         </button>
+                        {!editToggle && itsOwnProfile && (
+                          <button
+                            onClick={() => setEditToggle(true)}
+                            className="btn btn-ghost rounded-full bg-transparent hover:btn-primary hover:bg-secondary 2xl:btn-lg"
+                          >
+                            Edit Profile
+                          </button>
+                        )}
                       </div>
                     )}
                     {isAuthenticated && !editToggle && !itsOwnProfile && (
@@ -610,7 +659,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                     <div className="modal-box w-11/12 max-w-4xl">
                       <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 2xl:btn-lg">
                           ✕
                         </button>
                       </form>
@@ -713,10 +762,25 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 ) : loading ? (
                   "loading..."
                 ) : (
-                  profileUser.bio || "No bio . . ."
+                  <div className="flex flex-col gap-4">
+                    <p className="font-medium">
+                      {profileUser.bio || "No bio . . ."}
+                    </p>
+                    <div>
+                      <h1 className="text-lg font-semibold xl:text-xl pb-6">
+                        Posts
+                      </h1>
+                      <div className="grid grid-cols-3 gap-1">
+                        {posts.map((post) => (
+                          <div>
+                            <PostCard key={post.postId} post={post} location="profile"/>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
-
               {editToggle && itsOwnProfile && (
                 <div className="w-full pl-12 flex flex-col gap-4">
                   <div className="justify-center flex flex-row gap-4">
@@ -734,14 +798,6 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                     </button>
                   </div>
                 </div>
-              )}
-              {!editToggle && itsOwnProfile && (
-                <button
-                  onClick={() => setEditToggle(true)}
-                  className="btn btn-primary rounded-2xl"
-                >
-                  Edit Profile
-                </button>
               )}
             </div>
           </div>

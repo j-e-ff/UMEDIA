@@ -33,15 +33,15 @@ interface Forum {
 
 type PostCardProps = {
   post: Post;
+  location: string;
 };
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
   const { firestoreUser } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [forum, setForum] = useState<Forum | null>();
   const [fetchedForum, setFetchedForum] = useState(false);
- 
 
   const handleNext = () => {
     setCurrentImageIndex((prev) => (prev = prev + 1));
@@ -78,9 +78,136 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     return () => unsubscribe();
   }, [post, firestoreUser]);
 
-  if (post.forumId != "general" && fetchedForum == false) return(
-    <div><span className="loading loading-spinner loading-xl"></span></div>
-  )
+  if (post.forumId != "general" && fetchedForum == false)
+    return (
+      <div>
+        <span className="loading loading-spinner loading-xl"></span>
+      </div>
+    );
+
+  if (location === "profile")
+    return (
+      <div className="">
+        
+        <div className="group h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl hover:brightness-50 hover:cursor-pointer">
+          <div className="h-80">
+            {/* title + avatar */}
+            <Link href={`/post/${post.postId}`}>
+              {post.forumId === "general" ? (
+                <div className="flex pl-2 pt-2 ">
+                  <div className="relative min-w-12 min-h-12 max-w-12 max-h-12 ">
+                    {post.userImage && (
+                      <Image
+                        src={post.userImage}
+                        fill
+                        alt="userImage"
+                        className=" rounded-full object-cover"
+                        loading="eager"
+                        unoptimized
+                      />
+                    )}
+                  </div>
+                  <div className="h-12 w-full overflow-y-auto">
+                    <h2 className="flex pl-2 pt-2 xl:text-2xl">
+                      @{post.userName}: {post.title}
+                    </h2>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex pl-2 pt-2 ">
+                  <div className="relative min-w-12 min-h-12 max-w-12 max-h-12 ">
+                    {forum?.forumImage && (
+                      <Image
+                        src={forum.forumImage}
+                        fill
+                        alt="forumImage"
+                        className="rounded-full object-cover"
+                        loading="eager"
+                        unoptimized
+                      />
+                    )}
+                  </div>
+                  <div className="h-10 w-full overflow-y-scroll">
+                    <h2 className="pl-2 pt-2 xl:text-2xl overflow-y-hidden">
+                      @{forum?.name}: {post.title}
+                    </h2>
+                  </div>
+                </div>
+              )}
+            </Link>
+
+            {/* displaying content */}
+            {post.photoUrls.length > 0 && (
+              <div className="flex py-2">
+                <figure className="relative w-100 h-64 xl:w-80 xl:h-60 2xl:w-100 2xl:h-60">
+                  <div className="flex items-center justify-center ">
+                    <Image
+                      key={currentImageIndex}
+                      src={post.photoUrls[0]}
+                      alt={post.postId}
+                      fill
+                      className="h-64 object-contain px-2 py-2 "
+                      loading="eager"
+                      unoptimized
+                    />
+                  </div>
+                </figure>
+              </div>
+            )}
+            {!(post.photoUrls.length > 0) && (
+              <div className="flex flex-col h-65">
+                <p className="py-4 px-4 text-lg overflow-y-auto wrap-anywhere">
+                  {post.description}{" "}
+                </p>
+                <div className="flex justify-start mt-auto">
+                  {/* Like Button */}
+                  <button
+                    onClick={() => {
+                      if (isLiked) {
+                        unlikePost(firestoreUser!.uid, post.postId);
+                      } else {
+                        likePost(firestoreUser!.uid, post.postId);
+                      }
+                    }}
+                    className="btn btn-neutral rounded-full"
+                  >
+                    <svg
+                      className="size-[1.2em]"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                    >
+                      <g
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        strokeWidth="2"
+                        fill={isLiked ? "red" : "none"}
+                        stroke="currentColor"
+                      >
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                      </g>
+                    </svg>
+                  </button>
+                  {/* Comment Button */}
+                  <Link href={`/post/${post.postId}`} passHref>
+                    <button className="btn btn-neutral bg-red rounded-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 16 16"
+                        className="w-4 h-4 text-white"
+                        fill="currentColor"
+                      >
+                        <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                        <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2" />
+                      </svg>
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <div>
@@ -96,6 +223,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                       fill
                       alt="userImage"
                       className=" rounded-full object-cover"
+                      loading="eager"
+                      unoptimized
                     />
                   )}
                 </div>
@@ -111,6 +240,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                       alt="forumImage"
                       className="rounded-full object-cover"
                       loading="eager"
+                      unoptimized
                     />
                   )}
                 </div>
@@ -153,6 +283,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   height={520}
                   className="w-180 h-full xl:w-280 xl:h-200 object-contain rounded-lg "
                   loading="eager"
+                  unoptimized
                 />
               </div>
               <p className="text-xs mt-2">

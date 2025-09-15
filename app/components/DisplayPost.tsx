@@ -129,7 +129,6 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
         id: doc.id,
         ...(doc.data() as Post),
       }));
-      console.log("forumPosts: ", postList);
       setForumPosts(postList);
     } catch (error) {
       console.error("error fetching forum posts", error);
@@ -174,7 +173,7 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
       ) : (
         <div className="grid grid-cols-1 gap-12 ">
           {postsToDisplay.map((post) => (
-            <PostCard key={post.postId} post={post} />
+            <PostCard key={post.postId} post={post} location="displaypost"/>
           ))}
         </div>
       )}
