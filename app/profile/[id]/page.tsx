@@ -161,9 +161,10 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
+        if (!id) return;
         const q = query(
           collection(db, "posts"),
-          where("userId", "==", firestoreUser?.uid),
+          where("userId", "==", id),
           orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(q);
@@ -172,13 +173,12 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
           ...(doc.data() as Post),
         }));
         setPosts(postList);
-        console.log(postList);
       } catch (error) {
         console.error("failed to fetch user posts:", error);
       }
     };
     fetchUserPosts();
-  }, [firestoreUser?.uid]);
+  }, [firestoreUser?.uid,id]);
 
   const fetchUsersByIds = async (userIds: string[]) => {
     const chunks = [];
@@ -333,19 +333,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
     }
   };
 
-  if (!isAuthenticated && !itsOwnProfile) {
-    return (
-      <div className="flex flex-row min-h-screen">
-        <Navbar />
-        <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-64 sm:p-20 w-full">
-          <div className="w-full max-w-4xl">
-            <h1 className="text-2xl font-bold mb-4">Sign in to create posts</h1>
-            <p className=" mb-4">you need to be signed in to create a post</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
 
   if (!profileUser) {
     return (
@@ -772,8 +760,8 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                       </h1>
                       <div className="grid grid-cols-3 gap-1">
                         {posts.map((post) => (
-                          <div>
-                            <PostCard key={post.postId} post={post} location="profile"/>
+                          <div key={post.postId}>
+                            <PostCard post={post} location="profile"/>
                           </div>
                         ))}
                       </div>

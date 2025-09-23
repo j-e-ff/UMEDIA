@@ -193,10 +193,10 @@ const MessagesPage = () => {
       <div className="flex flex-row">
         <Navbar />
         <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-4 pb-20 ml-16 sm:ml-20 md:ml-20 lg:ml-20 xl:ml-64 w-full max-w-none posting-container">
-          <div className="w-full max-w-4xl px-4">
-            <h1 className="text-2xl font-bold mb-4 xl:text-4xl">Sign in to create posts</h1>
+          <div className="w-full max-w-4xl px-4 m-auto text-center">
+            <h1 className="text-2xl font-bold mb-4 xl:text-4xl">Sign in to message</h1>
             <p className="text-gray-600 mb-4 xl:text-2xl">
-              you need to be signed in to create a post
+              you need to be signed in to access messages
             </p>
             <button
               onClick={() => signInWithPopup(auth, googleProvider)}

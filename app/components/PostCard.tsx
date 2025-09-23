@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/firebase";
 import { useAuth } from "../context/AuthContext";
 import { forumIdSearch } from "@/app/utils/forumIdSearch";
+import { userProfilePicture } from "../utils/userProfilePicture";
 import { likePost } from "@/app/utils/likePost";
 import { unlikePost } from "@/app/utils/unlikePost";
-import { collection, onSnapshot, Timestamp } from "firebase/firestore";
+import { collection, getDocs, onSnapshot, Timestamp } from "firebase/firestore";
+import { profile } from "console";
 
 interface Post {
   description: string;
@@ -42,6 +44,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [forum, setForum] = useState<Forum | null>();
   const [fetchedForum, setFetchedForum] = useState(false);
+  const [comments, setComments] = useState(0);
+  const [profilePicture, setProfilePicture] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleNext = () => {
     setCurrentImageIndex((prev) => (prev = prev + 1));
@@ -50,6 +55,28 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
   const handlePrev = () => {
     setCurrentImageIndex((prev) => (prev = prev - 1));
   };
+
+  useEffect(() => {
+    const fetchProfilePicture = async () => {
+      try {
+        if (!post.userId) return;
+        const url = await userProfilePicture(post.userId);
+        if (url) {
+          setProfilePicture(url);
+          setLoading(false);
+        } else {
+          console.error("No profile picture found for user:", post.userId);
+        }
+      } catch (error) {
+        console.error(
+          "Error fetching user profile picture: ",
+          error,
+          post.userId
+        );
+      }
+    };
+    fetchProfilePicture();
+  }, [post.userId]);
 
   // useEffect for getting the forum
   useEffect(() => {
@@ -78,7 +105,30 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
     return () => unsubscribe();
   }, [post, firestoreUser]);
 
+  // fetching post's comments (number) to display
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const q = collection(db, "posts", post.postId, "comments");
+        const querySnapshot = await getDocs(q);
+        const commentsList = querySnapshot.docs.length;
+        setComments(commentsList);
+      } catch (error) {
+        console.log("Error fetching post comments:", error);
+      }
+    };
+    fetchComments();
+  }, [post.postId]);
+
+  // fetching post's likes (number)
   if (post.forumId != "general" && fetchedForum == false)
+    return (
+      <div>
+        <span className="loading loading-spinner loading-xl"></span>
+      </div>
+    );
+
+  if (loading)
     return (
       <div>
         <span className="loading loading-spinner loading-xl"></span>
@@ -87,9 +137,10 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
 
   if (location === "profile")
     return (
-      <div className="">
-        
-        <div className="group h-full bg-neutral text-neutral-content shadow-xl overflow-hidden rounded-xl hover:brightness-50 hover:cursor-pointer">
+      // card container
+      <div className="relative group">
+        {/* card  */}
+        <div className=" h-full bg-neutral text-neutral-content overflow-hidden rounded-xl hover:brightness-40">
           <div className="h-80">
             {/* title + avatar */}
             <Link href={`/post/${post.postId}`}>
@@ -98,10 +149,10 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
                   <div className="relative min-w-12 min-h-12 max-w-12 max-h-12 ">
                     {post.userImage && (
                       <Image
-                        src={post.userImage}
-                        fill
+                        src={profilePicture}
+                        fill={true}
                         alt="userImage"
-                        className=" rounded-full object-cover"
+                        className="rounded-full object-cover"
                         loading="eager"
                         unoptimized
                       />
@@ -119,9 +170,10 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
                     {forum?.forumImage && (
                       <Image
                         src={forum.forumImage}
-                        fill
+                        width={720}
+                        height={520}
                         alt="forumImage"
-                        className="rounded-full object-cover"
+                        className="rounded-full object-cover "
                         loading="eager"
                         unoptimized
                       />
@@ -136,19 +188,19 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
               )}
             </Link>
 
-            {/* displaying content */}
+            {/* displaying content, checking if the post has images or text based */}
             {post.photoUrls.length > 0 && (
               <div className="flex py-2">
                 <figure className="relative w-100 h-64 xl:w-80 xl:h-60 2xl:w-100 2xl:h-60">
                   <div className="flex items-center justify-center ">
                     <Image
-                      key={currentImageIndex}
+                      key={post.photoUrls[0]}
                       src={post.photoUrls[0]}
                       alt={post.postId}
-                      fill
-                      className="h-64 object-contain px-2 py-2 "
+                      width={720}
+                      height={520}
+                      className="h-64 object-contain px-2 py-2"
                       loading="eager"
-                      unoptimized
                     />
                   </div>
                 </figure>
@@ -206,6 +258,38 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
             )}
           </div>
         </div>
+        <div>
+          <div className="absolute top-40 left-20 flex opacity-0 group-hover:opacity-100 gap-2 ">
+            <div className="flex flex-row gap-2 text-center">
+              <svg
+                className="size-[1.2em] text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="-1 -2 26 26"
+              >
+                <g
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  strokeWidth="2"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                </g>
+              </svg>
+              <p>{}</p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="-3 -2 22 22"
+                className="w-6 h-6 text-white "
+                fill="currentColor"
+              >
+                <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2" />
+              </svg>
+              <p className="text-white">{comments}</p>
+            </div>
+          </div>
+        </div>
       </div>
     );
 
@@ -219,8 +303,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
                 <div className="relative w-12 h-12 xl:w-16 xl:h-16">
                   {post.userImage && (
                     <Image
-                      src={post.userImage}
-                      fill
+                      src={profilePicture}
+                      fill={true}
                       alt="userImage"
                       className=" rounded-full object-cover"
                       loading="eager"
@@ -236,7 +320,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
                   {forum?.forumImage && (
                     <Image
                       src={forum.forumImage}
-                      fill
+                      width={720}
+                      height={520}
                       alt="forumImage"
                       className="rounded-full object-cover"
                       loading="eager"
@@ -276,7 +361,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
             <figure className="px-6  flex flex-col items-center ">
               <div className="h-130 xl:h-210 flex items-center justify-center">
                 <Image
-                  key={currentImageIndex} // re-trigger transition on index change
+                  key={post.photoUrls[currentImageIndex]}
                   src={post.photoUrls[currentImageIndex]}
                   alt={`Image ${currentImageIndex + 1}`}
                   width={720}

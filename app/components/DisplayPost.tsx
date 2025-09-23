@@ -88,8 +88,6 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
           uniquePosts.sort(
             (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis()
           );
-
-          console.log("user posts:", uniquePosts);
           setPosts(uniquePosts);
           if (forumId.length > 0) {
             fetchForumPosts(forumId);
@@ -106,7 +104,6 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
             id: doc.id,
             ...(doc.data() as Post),
           }));
-          console.log("Forum posts: ", postsList);
           setForumPosts(postsList);
         }
       } catch (error) {

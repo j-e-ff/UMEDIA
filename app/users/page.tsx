@@ -1,4 +1,4 @@
- "use client";
+"use client";
 import React, { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
@@ -114,6 +114,8 @@ function UserPageContent() {
                   className="size-16 object-contain rounded-box"
                   src={user.photoURL}
                   alt={user.username}
+                  width={720}
+                  height={520}
                 />
                 <div className="uppercase">
                   <p className="text-base">{user.username}</p>

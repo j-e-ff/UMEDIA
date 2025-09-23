@@ -21,7 +21,6 @@ const SearchPage = () => {
   const users = useUsers(searchTerm);
   const forums = useForums(searchTerm);
 
-  console.log("forums", forums);
 
   useEffect(() => {
     if (!firestoreUser?.uid) return;
