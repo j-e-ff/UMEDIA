@@ -29,7 +29,7 @@ function HomeContent() {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen ml-20 lg:ml-30 xl:ml-55 px-2  w-full">
+      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen sm:ml-20 lg:ml-30 xl:ml-55 px-2  w-full">
         {/* Toast for successful post creation */}
         {showToast && (
           <div className="toast toast-start">

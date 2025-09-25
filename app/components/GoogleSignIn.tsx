@@ -90,7 +90,6 @@ const GoogleSignIn = () => {
           console.log("user does not exist", userRef);
         }
       } else {
-        console.log("User already exists:", userSnap.data());
         if (userSnap.exists()) {
           setFirestoreUser(userSnap.data() as FirestoreUser);
         } else {
@@ -107,16 +106,16 @@ const GoogleSignIn = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="bg-none pl-2 pb-2">
+    <div className="bg-none p-2 pb-2">
       {isAuthenticated ? (
         <div className="dropdown dropdown-top">
           <div
             tabIndex={0}
             role="button"
-            className="card sm:w-16 md:w-16 lg:w-16 xl:w-45 2xl:w-55 shadow flex flex-row items-center gap-4 p-2 cursor-pointer rounded-full bg-primary "
+            className="card sm:w-16 md:w-16 lg:w-16 xl:w-45 2xl:w-55 shadow flex flex-row items-center sm:gap-4 md:gap-4 xl:gap-4 p-2 cursor-pointer rounded-full bg-primary "
           >
             <div className="avatar">
-              <div className="w-12 rounded-full">
+              <div className="w-12 rounded-full ">
                 <Image
                   src={
                     firestoreUser?.photoURL ||
@@ -125,7 +124,7 @@ const GoogleSignIn = () => {
                   }
                   fill
                   alt="User Avatar"
-                  className="object-cover rounded-full"
+                  className="object-cover rounded-full "
                 />
               </div>
             </div>

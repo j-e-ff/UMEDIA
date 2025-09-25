@@ -128,8 +128,7 @@ const MessagesPage = () => {
         lastMessage: "",
         updatedAt: serverTimestamp(),
       });
-
-      console.log("Current Chat ID:", chatId);
+     
       if (messagingIds.includes(chatId)) return;
 
       // add to messagingUser subcollection in firestore
@@ -147,8 +146,6 @@ const MessagesPage = () => {
       // after doc is created, find userID of the clicked user (chat) and find userID in subcollection to get chatID
       const data = docSnap.data() as Chat;
       setCurrentChatId(data.chatId);
-      console.log("Chat ID:", currentChatId);
-      console.log("Chat already exists, skipping creation");
     }
   }
 
