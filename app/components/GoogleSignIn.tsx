@@ -106,16 +106,16 @@ const GoogleSignIn = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="bg-none p-2 pb-2">
+    <div className="bg-none pr-4 pt-2 mr-2 mt-1 sm:p-2 sm:pb-2">
       {isAuthenticated ? (
         <div className="dropdown dropdown-top">
           <div
             tabIndex={0}
             role="button"
-            className="card sm:w-16 md:w-16 lg:w-16 xl:w-45 2xl:w-55 shadow flex flex-row items-center sm:gap-4 md:gap-4 xl:gap-4 p-2 cursor-pointer rounded-full bg-primary "
+            className="card sm:w-16 md:w-16 lg:w-16 xl:w-45 2xl:w-55 flex flex-row items-center sm:gap-4 md:gap-4 xl:gap-4 cursor-pointer rounded-full bg-primary "
           >
             <div className="avatar">
-              <div className="w-12 rounded-full ">
+              <div className="w-10 sm:w-16 rounded-full shadow-xl">
                 <Image
                   src={
                     firestoreUser?.photoURL ||

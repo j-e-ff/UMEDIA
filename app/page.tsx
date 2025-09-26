@@ -39,7 +39,7 @@ function HomeContent() {
           </div>
         )}
 
-        <h1 className="mt-10 xl:text-xl">HOMEPAGE</h1>
+        <h1 className="mt-10 xl:text-xl pb-10 sm:pb-0">HOMEPAGE</h1>
         <HomePage />
       </div>
     </div>

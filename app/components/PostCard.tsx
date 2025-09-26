@@ -146,13 +146,13 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
             <Link href={`/post/${post.postId}`}>
               {post.forumId === "general" ? (
                 <div className="flex pl-2 pt-2 ">
-                  <div className="relative min-w-12 min-h-12 max-w-12 max-h-12 ">
+                  <div className="relative min-w-12 min-h-12 max-w-16 max-h-16">
                     {post.userImage && (
                       <Image
                         src={profilePicture}
                         fill={true}
                         alt="userImage"
-                        className="rounded-full object-cover"
+                        className="rounded-full object-cover w-10 h-10 xl:w-16 xl:h-16"
                         loading="eager"
                         unoptimized
                       />
@@ -166,14 +166,14 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
                 </div>
               ) : (
                 <div className="flex pl-2 pt-2 ">
-                  <div className="relative min-w-12 min-h-12 max-w-12 max-h-12 ">
+                  <div className="relative ">
                     {forum?.forumImage && (
                       <Image
                         src={forum.forumImage}
                         width={720}
                         height={520}
                         alt="forumImage"
-                        className="rounded-full object-cover "
+                        className="rounded-full object-cover w-10 h-10 xl:w-16 xl:h-16"
                         loading="eager"
                         unoptimized
                       />
@@ -304,7 +304,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
                   {post.userImage && (
                     <Image
                       src={profilePicture}
-                      fill={true}
+                      width={720}
+                      height={520}  
                       alt="userImage"
                       className=" rounded-full object-cover"
                       loading="eager"
@@ -323,7 +324,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, location }) => {
                       width={720}
                       height={520}
                       alt="forumImage"
-                      className="rounded-full object-cover"
+                      className="rounded-full object-cover w-12 h-12 xl:w-16 xl:h-16"
                       loading="eager"
                       unoptimized
                     />

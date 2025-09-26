@@ -347,9 +347,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
   }
 
   return (
-    <div className="flex flex-row ml-20 min-h-screen xl:ml-64">
+    <div className="flex flex-row sm:ml-20 min-h-screen xl:ml-64">
       <Navbar />
-      <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full ">
+      <div className="font-sans flex flex-col pb-2 gap-8 sm:p-20 w-full ">
         <div>
           <div className="hero w-full">
             <div className="hero-content w-full flex-col bg-base-300 rounded-2xl">
@@ -377,9 +377,9 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 )}
               </div>
 
-              <div className="flex flex-col w-full gap-4 pl-12">
+              <div className="flex flex-col w-full gap-4 ">
                 <div className="flex flex-row">
-                  <div className="avatar ">
+                  <div className="avatar">
                     <div className="w-22 rounded-full absolute -top-18 ">
                       <Image
                         src={
@@ -758,7 +758,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                       <h1 className="text-lg font-semibold xl:text-xl pb-6">
                         Posts
                       </h1>
-                      <div className="grid grid-cols-3 gap-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-1">
                         {posts.map((post) => (
                           <div key={post.postId}>
                             <PostCard post={post} location="profile"/>

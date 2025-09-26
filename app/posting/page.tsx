@@ -246,7 +246,7 @@ const Posting = () => {
     return (
       <div className="flex flex-row">
         <Navbar />
-        <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-64 sm:p-20 w-full">
+        <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 sm:ml-64 sm:p-20 w-full">
           <span className="loading loading-spinner text-primary"></span>
         </div>
       </div>
@@ -257,7 +257,7 @@ const Posting = () => {
     return (
       <div className="flex flex-row">
         <Navbar />
-        <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-4 pb-20 ml-16 sm:ml-20 md:ml-20 lg:ml-20 xl:ml-64 w-full max-w-none posting-container">
+        <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-4 pb-20  sm:ml-20 md:ml-20 lg:ml-80 xl:ml-64 w-full max-w-none posting-container">
           <div className="w-full max-w-4xl px-4">
             <h1 className="text-2xl font-bold mb-4">Sign in to create posts</h1>
             <p className="text-gray-600 mb-4">
@@ -305,7 +305,7 @@ const Posting = () => {
   return (
     <div className="flex flex-row">
       <Navbar />
-      <div className="xl:text-2xl font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 ml-20 xl:ml-64 lg:ml-20 md:ml-20 sm:ml-20 w-full max-w-none">
+      <div className="xl:text-2xl font-sans flex flex-col items-center justify-items-center min-h-screen p-4 pb-20 xl:ml-64 lg:ml-20 md:ml-20 sm:ml-20 w-full max-w-none">
         <div className="w-full max-w-4xl">
           <h1 className="mb-8 text-center">
             Create a new {forumToggle ? "forum" : "post"}

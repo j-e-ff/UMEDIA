@@ -60,7 +60,7 @@ const SearchPage = () => {
   }, [firestoreUser?.uid]);
 
   return (
-    <div className="flex flex-row ml-20 min-h-screen ">
+    <div className="flex flex-row sm:ml-20 min-h-screen ">
       <Navbar />
       <div className="font-sans flex flex-col items-center justify-items-center min-h-screen ml-2 pt-20 w-full xl:ml-43">
         <h1 className="pb-15 xl:text-lg">SEARCH PAGE</h1>
