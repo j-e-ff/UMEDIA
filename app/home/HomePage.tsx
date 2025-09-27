@@ -41,7 +41,7 @@ const HomePage = () => {
     return (
       <div className="flex flex-row">
         <Navbar />
-        <div className="font-sans flex flex-row h-screen w-full overflow-hidden ">
+        <div className="font-sans flex flex-row h-screen w-full overflow-hidden">
           <div className="w-full max-w-4xl px-4 m-auto text-center">
             <h1 className="text-2xl font-bold mb-4 xl:text-4xl">Sign in to view posts</h1>
             <p className="text-gray-600 mb-4 xl:text-2xl">

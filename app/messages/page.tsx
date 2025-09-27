@@ -415,7 +415,7 @@ const MessagesPage = () => {
       )}
 
       {screenSize === "xs" && (
-        <div className="font-sans h-screen w-full  gap-4 overflow-hidden ">
+        <div className="font-sans h-screen w-full gap-4 overflow-hidden ">
           {activeChat == false && (
             <div className="w-full flex flex-col gap-4 px-4">
               <p className="text-xl sm:text-4xl text-center">Messages</p>
@@ -513,7 +513,7 @@ const MessagesPage = () => {
           )}
 
           {activeChat == true && (
-            <div className="w-full px-4  ">
+            <div className="w-full px-4">
               {user && (
                 <div className="flex flex-row gap-4 items-center  ">
                   {/* Back button */}
@@ -543,7 +543,7 @@ const MessagesPage = () => {
                         fill
                       />
                     </div>
-                    <p className="font-bold text-lg xl:text-2xl 2xl:text-3xl">
+                    <p className="font-bold text-lg ">
                       {user.username}
                     </p>
                   </div>
@@ -581,7 +581,7 @@ const MessagesPage = () => {
                     ))}
                     <div ref={messageEndRef} />
                   </div>
-                  <div className="absolute bottom-10 w-full pr-8 ">
+                  <div className="fixed bottom-10 w-full pr-8 ">
                     <input
                       type="text"
                       placeholder="Message..."
