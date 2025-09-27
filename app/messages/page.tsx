@@ -581,7 +581,7 @@ const MessagesPage = () => {
                     ))}
                     <div ref={messageEndRef} />
                   </div>
-                  <div className="absolute bottom-10 w-full pr-8  md:bottom-30 xl:bottom-35 ">
+                  <div className="absolute bottom-10 w-full pr-8 ">
                     <input
                       type="text"
                       placeholder="Message..."
