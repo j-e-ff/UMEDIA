@@ -551,7 +551,7 @@ const MessagesPage = () => {
               {/* Displaying messages */}
 
               {user && (
-                <div className="h-[60vh]">
+                <div className="h-[75vh]">
                   <div className="flex flex-col gap-2 h-full overflow-y-auto ">
                     {messages.map((msg) => (
                       <div
