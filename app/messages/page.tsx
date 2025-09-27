@@ -543,9 +543,7 @@ const MessagesPage = () => {
                         fill
                       />
                     </div>
-                    <p className="font-bold text-lg ">
-                      {user.username}
-                    </p>
+                    <p className="font-bold text-lg ">{user.username}</p>
                   </div>
                 </div>
               )}
@@ -553,7 +551,7 @@ const MessagesPage = () => {
               {/* Displaying messages */}
 
               {user && (
-                <div className="h-[80vh]">
+                <div className="h-[60vh]">
                   <div className="flex flex-col gap-2 h-full overflow-y-auto ">
                     {messages.map((msg) => (
                       <div
@@ -581,7 +579,7 @@ const MessagesPage = () => {
                     ))}
                     <div ref={messageEndRef} />
                   </div>
-                  <div className="fixed bottom-15 w-full pr-8 ">
+                  <div className="fixed bottom-20 w-full pr-8 ">
                     <input
                       type="text"
                       placeholder="Message..."
