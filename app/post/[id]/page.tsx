@@ -192,7 +192,7 @@ const PostPage = ({ params }: PostPageProps) => {
   };
 
   return (
-    <div className="flex flex-row ml-20 min-h-screen xl:ml-64">
+    <div className="flex flex-row sm:ml-20 min-h-screen xl:ml-64">
       <Navbar />
       {post && (
         <div className="font-sans flex flex-col p-8 pb-20 gap-8 sm:p-20 w-full ">

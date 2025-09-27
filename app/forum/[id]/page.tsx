@@ -101,7 +101,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
   return (
     <div className="flex flex-row min-h-screen">
       <Navbar />
-      <div className=" font-sans flex flex-col items-center justify-items-center min-screen p-8 pb-20 ml-20 xl:ml-64  w-full">
+      <div className="font-sans flex flex-col items-center justify-items-center min-screen pb-20 sm:ml-20 xl:ml-64  w-full">
         <div>
           <div className="hero">
             <div className="hero-content flex-col w-full bg-base-300 rounded-2xl">
@@ -114,7 +114,7 @@ const ForumPage = ({ params }: ForumPageProps) => {
                     : `url('${forum.forumImage}')`,
                 }}
               ></div>
-              <div className="flex flex-col w-full gap-4 pl-12">
+              <div className="flex flex-col w-full gap-4 sm:pl-12">
                 <div className="flex flex-row">
                   <div className="avatar ">
                     <div className="w-22 rounded-full absolute -top-18">

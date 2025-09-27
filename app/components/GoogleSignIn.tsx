@@ -108,7 +108,7 @@ const GoogleSignIn = () => {
   return (
     <div className="bg-none pr-4 pt-2 mr-2 mt-1 sm:p-2 sm:pb-2">
       {isAuthenticated ? (
-        <div className="dropdown dropdown-top">
+        <div className="dropdown dropdown-top dropdown-end">
           <div
             tabIndex={0}
             role="button"

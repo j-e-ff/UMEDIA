@@ -4,6 +4,7 @@ import Image from "next/image";
 import Navbar from "../components/Navbar";
 import { useUsers } from "../hooks/useUsers";
 import { useUserIdSearch } from "../hooks/useUserIdSearch";
+import useScreenSize from "../hooks/useScreenSize";
 import { useAuth } from "@/app/context/AuthContext";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, db } from "@/lib/firebase";
@@ -45,7 +46,7 @@ interface ChatMessage {
 }
 
 const MessagesPage = () => {
-  const {  firestoreUser, isAuthenticated, } = useAuth();
+  const { firestoreUser, isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState(""); // user search term
   const [messagingIds, setMessagingIds] = useState<string[]>([]); //stores the userId of messaged users
   const [message, setMessage] = useState(""); // message user is sending
@@ -55,6 +56,8 @@ const MessagesPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [currentChatId, setCurrentChatId] = useState("");
   const messageEndRef = useRef<HTMLDivElement>(null);
+  const screenSize = useScreenSize();
+  const [activeChat, setActiveChat] = useState(false);
 
   useEffect(() => {
     scrollToBottom();
@@ -128,7 +131,7 @@ const MessagesPage = () => {
         lastMessage: "",
         updatedAt: serverTimestamp(),
       });
-     
+
       if (messagingIds.includes(chatId)) return;
 
       // add to messagingUser subcollection in firestore
@@ -189,9 +192,11 @@ const MessagesPage = () => {
     return (
       <div className="flex flex-row">
         <Navbar />
-        <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-4 pb-20 ml-16 sm:ml-20 md:ml-20 lg:ml-20 xl:ml-64 w-full max-w-none posting-container">
+        <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-4 pb-20 sm:ml-20 md:ml-20 lg:ml-20 xl:ml-64 w-full max-w-none posting-container">
           <div className="w-full max-w-4xl px-4 m-auto text-center">
-            <h1 className="text-2xl font-bold mb-4 xl:text-4xl">Sign in to message</h1>
+            <h1 className="text-2xl font-bold mb-4 xl:text-4xl">
+              Sign in to message
+            </h1>
             <p className="text-gray-600 mb-4 xl:text-2xl">
               you need to be signed in to access messages
             </p>
@@ -233,79 +238,304 @@ const MessagesPage = () => {
       </div>
     );
   }
-  
+
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row ">
       <Navbar />
-      <div className="font-sans flex flex-row h-screen pt-12 pl-6 w-full gap-4 overflow-hidden xl:ml-64 ml-20">
-        <div className="w-100 flex flex-col gap-4">
-          <p className="text-4xl text-center">Messages</p>
-          <label className="input input-primary xl:input-lg">
-            <svg
-              className="h-[1em] opacity-50 "
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2.5"
-                fill="none"
-                stroke="currentColor"
+      {screenSize != "xs" && (
+        <div className="font-sans flex flex-row h-screen pt-12 pl-2 sm:ml-20 w-full gap-4 overflow-hidden xl:ml-64">
+          <div className="w-100 flex flex-col gap-4">
+            <p className="text-xl sm:text-4xl text-center">Messages</p>
+            <label className="input input-primary input-sm xl:input-lg">
+              <svg
+                className="h-[1em] opacity-50 "
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
               >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </g>
-            </svg>
-            <input
-              type="search"
-              required
-              placeholder="Search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="grow"
-            />
-          </label>
-          {currentChatId && (
-            <div className="text-center text-sm bg-secondary text-secondary-content p-2 rounded-lg xl:text-2xl">
-              Active chat: {user?.username}
-            </div>
-          )}
-          {searchTerm && (
-            <div className="w-full">
-              {users.map((user) => (
-                <li
-                  key={user.id}
-                  className="flex items-center justify-between pt-4 pb-4 px-2 rounded-lg hover:bg-primary hover:cursor-pointer transition-colors"
-                  onClick={() => messageUser(firestoreUser!.uid, user)}
+                <g
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  strokeWidth="2.5"
+                  fill="none"
+                  stroke="currentColor"
                 >
-                  <div className="flex items-center gap-4 ">
-                    <div className="relative w-12 h-12 xl:w-20 xl:h-20">
-                      <Image
-                        className="size-12 object-cover rounded-box"
-                        src={user.photoURL}
-                        alt={user.username}
-                       fill
-                      />
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </g>
+              </svg>
+              <input
+                type="search"
+                required
+                placeholder="Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="grow"
+              />
+            </label>
+            {currentChatId && (
+              <div className="text-center text-sm bg-secondary text-secondary-content p-2 rounded-lg xl:text-2xl">
+                Active chat: {user?.username}
+              </div>
+            )}
+            {searchTerm && (
+              <div className="w-full">
+                {users.map((user) => (
+                  <li
+                    key={user.id}
+                    className="flex items-center justify-between pt-4 pb-4 px-2 rounded-lg hover:bg-primary hover:cursor-pointer transition-colors"
+                    onClick={() => {
+                      messageUser(firestoreUser!.uid, user);
+                      setActiveChat(true);
+                    }}
+                  >
+                    <div className="flex items-center gap-4 ">
+                      <div className="relative w-12 h-12 xl:w-20 xl:h-20">
+                        <Image
+                          className="size-12 object-cover rounded-box"
+                          src={user.photoURL}
+                          alt={user.username}
+                          fill
+                        />
+                      </div>
+                      <div className="">
+                        <p className="text-base font-semibold xl:text-lg">
+                          {user.username}
+                        </p>
+                      </div>
                     </div>
-                    <div className="">
-                      <p className="text-base font-semibold xl:text-lg">{user.username}</p>
+                  </li>
+                ))}
+              </div>
+            )}
+            {!searchTerm && (
+              <div className="w-full">
+                {userProfiles.map((user) => (
+                  <li
+                    key={user.id}
+                    className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-primary hover:cursor-pointer hover:text-primary-content transition-colors"
+                    onClick={() => messageUser(firestoreUser!.uid, user)}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="relative w-12 h-12 xl:w-20 xl:h-20 ">
+                        <Image
+                          className="object-cover rounded-box"
+                          src={user.photoURL}
+                          alt={user.username}
+                          fill
+                        />
+                      </div>
+                      <div className="lowercase">
+                        <p className="text-base font-semibold xl:text-lg">
+                          {user.username}
+                        </p>
+                        <p className="text-xs wrap-anywhere xl:text-lg">
+                          {user.email}
+                        </p>
+                      </div>
                     </div>
+                  </li>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Divider to separate the the chat section with message section (leftright) */}
+          <div className="divider divider-horizontal divider-accent"></div>
+
+          <div className="w-full">
+            {user && (
+              <div>
+                <div className="flex flex-row gap-4 items-center">
+                  <div className="relative w-16 h-16 xl:w-20 xl:h-20">
+                    <Image
+                      className="object-cover rounded-box"
+                      src={user.photoURL}
+                      alt={user.username}
+                      fill
+                    />
                   </div>
-                </li>
-              ))}
+                  <p className="font-bold text-lg xl:text-2xl 2xl:text-3xl">
+                    {user.username}
+                  </p>
+                </div>
+              </div>
+            )}
+            {!user && (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                  <h1 className="text-4xl mb-4">Welcome to Messages</h1>
+                  <p>Select a user to start chatting</p>
+                </div>
+              </div>
+            )}
+            <div className="divider divider-vertical divider-accent pr-8"></div>
+            {user && (
+              <div className="pr-8 relative h-full pb-44 xl:pb-50 ">
+                <div className="flex flex-col gap-2 h-full overflow-y-auto pr-2">
+                  {messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`p-2 rounded-lg max-w-xs  ${
+                        msg.senderId === firestoreUser!.uid
+                          ? "bg-primary text-primary-content ml-auto"
+                          : "bg-neutral text-neutral-content"
+                      }`}
+                    >
+                      <p className="text-base xl:text-lg 2xl:text-2xl">
+                        {msg.text}
+                      </p>
+                      <span className="text-xs opacity-70 xl:text-base">
+                        {msg.createdAt
+                          ? msg.createdAt.toDate().toLocaleTimeString([], {
+                              hour: "numeric",
+                              minute: "numeric",
+                              month: "short",
+                              day: "2-digit",
+                            })
+                          : "Just now"}
+                      </span>
+                    </div>
+                  ))}
+                  <div ref={messageEndRef} />
+                </div>
+                <div className="absolute bottom-35 w-full pr-8 2xl:bottom-35 md:bottom-30 xl:bottom-35 ">
+                  <input
+                    type="text"
+                    placeholder="Message..."
+                    className="grow input input-secondary w-full xl:input-lg 2xl:input-xl"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {screenSize === "xs" && (
+        <div className="font-sans h-screen w-full  gap-4 overflow-hidden ">
+          {activeChat == false && (
+            <div className="w-full flex flex-col gap-4 px-4">
+              <p className="text-xl sm:text-4xl text-center">Messages</p>
+              <label className="input input-primary input-md w-full ">
+                <svg
+                  className="h-[1em] opacity-50 "
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </g>
+                </svg>
+                <input
+                  type="search"
+                  required
+                  placeholder="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="grow"
+                />
+              </label>
+
+              {searchTerm && (
+                <div className="w-full">
+                  {users.map((user) => (
+                    <li
+                      key={user.id}
+                      className="flex items-center justify-between pt-4 pb-4 px-2 rounded-lg hover:bg-primary hover:cursor-pointer transition-colors"
+                      onClick={() => {
+                        messageUser(firestoreUser!.uid, user);
+                        setActiveChat(true);
+                      }}
+                    >
+                      <div className="flex items-center gap-4 ">
+                        <div className="relative w-12 h-12 xl:w-20 xl:h-20">
+                          <Image
+                            className="size-12 object-cover rounded-box"
+                            src={user.photoURL}
+                            alt={user.username}
+                            fill
+                          />
+                        </div>
+                        <div className="">
+                          <p className="text-base font-semibold xl:text-lg">
+                            {user.username}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </div>
+              )}
+              {!searchTerm && (
+                <div className="w-full">
+                  {userProfiles.map((user) => (
+                    <li
+                      key={user.id}
+                      className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-primary hover:cursor-pointer hover:text-primary-content transition-colors"
+                      onClick={() => {
+                        messageUser(firestoreUser!.uid, user);
+                        setActiveChat(true);
+                      }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-12 h-12 xl:w-20 xl:h-20 ">
+                          <Image
+                            className="object-cover rounded-box"
+                            src={user.photoURL}
+                            alt={user.username}
+                            fill
+                          />
+                        </div>
+                        <div className="lowercase">
+                          <p className="text-base font-semibold xl:text-lg">
+                            {user.username}
+                          </p>
+                          <p className="text-xs wrap-anywhere xl:text-lg">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </div>
+              )}
             </div>
           )}
-          {!searchTerm && (
-            <div className="w-full">
-              {userProfiles.map((user) => (
-                <li
-                  key={user.id}
-                  className="flex items-center justify-between pt-4 pb-4 pl-2 rounded-lg hover:bg-primary hover:cursor-pointer hover:text-primary-content transition-colors"
-                  onClick={() => messageUser(firestoreUser!.uid, user)}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-12 h-12 xl:w-20 xl:h-20 ">
+
+          {activeChat == true && (
+            <div className="w-full px-4  ">
+              {user && (
+                <div className="flex flex-row gap-4 items-center  ">
+                  {/* Back button */}
+                  <button
+                    className="btn btn-sm rounded-sm"
+                    onClick={() => setActiveChat(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      className="bi bi-arrow-left"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+                      />
+                    </svg>
+                  </button>
+                  <div className="flex flex-row gap-4 items-center">
+                    <div className="relative w-16 h-16 xl:w-20 xl:h-20">
                       <Image
                         className="object-cover rounded-box"
                         src={user.photoURL}
@@ -313,83 +543,60 @@ const MessagesPage = () => {
                         fill
                       />
                     </div>
-                    <div className="lowercase">
-                      <p className="text-base font-semibold xl:text-lg">{user.username}</p>
-                      <p className="text-xs wrap-anywhere xl:text-lg">{user.email}</p>
-                    </div>
+                    <p className="font-bold text-lg xl:text-2xl 2xl:text-3xl">
+                      {user.username}
+                    </p>
                   </div>
-                </li>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="divider divider-horizontal divider-accent"></div>
-        <div className="w-full">
-          {user && (
-            <div>
-              <div className="flex flex-row gap-4 items-center">
-                <div className="relative w-16 h-16 xl:w-20 xl:h-20">
-                  <Image
-                    className="object-cover rounded-box"
-                    src={user.photoURL}
-                    alt={user.username}
-                    fill
-                  />
                 </div>
-                <p className="font-bold text-lg xl:text-2xl 2xl:text-3xl">{user.username}</p>
-              </div>
-            </div>
-          )}
-          {!user && (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center">
-                <h1 className="text-4xl mb-4">Welcome to Messages</h1>
-                <p>Select a user to start chatting</p>
-              </div>
-            </div>
-          )}
-          <div className="divider divider-vertical divider-accent pr-8"></div>
-          {user && (
-            <div className="pr-8 relative h-full pb-44 xl:pb-50 ">
-              <div className="flex flex-col gap-2 h-full overflow-y-auto pr-2">
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`p-2 rounded-lg max-w-xs  ${
-                      msg.senderId === firestoreUser!.uid
-                        ? "bg-primary text-primary-content ml-auto"
-                        : "bg-neutral text-neutral-content"
-                    }`}
-                  >
-                    <p className="text-base xl:text-lg 2xl:text-2xl">{msg.text}</p>
-                    <span className="text-xs opacity-70 xl:text-base">
-                      {msg.createdAt
-                        ? msg.createdAt.toDate().toLocaleTimeString([], {
-                            hour: "numeric",
-                            minute: "numeric",
-                            month: "short",
-                            day: "2-digit",
-                          })
-                        : "Just now"}
-                    </span>
+              )}
+
+              {/* Displaying messages */}
+
+              {user && (
+                <div className="h-[80vh]">
+                  <div className="flex flex-col gap-2 h-full overflow-y-auto ">
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`p-2 rounded-lg max-w-xs  ${
+                          msg.senderId === firestoreUser!.uid
+                            ? "bg-secondary text-secondary-content ml-auto"
+                            : "bg-neutral text-neutral-content"
+                        }`}
+                      >
+                        <p className="text-base xl:text-lg 2xl:text-2xl">
+                          {msg.text}
+                        </p>
+                        <span className="text-xs opacity-70 xl:text-base">
+                          {msg.createdAt
+                            ? msg.createdAt.toDate().toLocaleTimeString([], {
+                                hour: "numeric",
+                                minute: "numeric",
+                                month: "short",
+                                day: "2-digit",
+                              })
+                            : "Just now"}
+                        </span>
+                      </div>
+                    ))}
+                    <div ref={messageEndRef} />
                   </div>
-                ))}
-                <div ref={messageEndRef} />
-              </div>
-              <div className="absolute bottom-35 w-full pr-8 2xl:bottom-35 md:bottom-30 xl:bottom-35 ">
-                <input
-                  type="text"
-                  placeholder="Message..."
-                  className="grow input input-secondary w-full xl:input-lg 2xl:input-xl"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                />
-              </div>
+                  <div className="absolute bottom-10 w-full pr-8  md:bottom-30 xl:bottom-35 ">
+                    <input
+                      type="text"
+                      placeholder="Message..."
+                      className="grow input input-secondary w-full xl:input-lg 2xl:input-xl"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
-      </div>
+      )}
     </div>
   );
 };

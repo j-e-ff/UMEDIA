@@ -178,7 +178,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
       }
     };
     fetchUserPosts();
-  }, [firestoreUser?.uid,id]);
+  }, [firestoreUser?.uid, id]);
 
   const fetchUsersByIds = async (userIds: string[]) => {
     const chunks = [];
@@ -333,8 +333,6 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
     }
   };
 
-  
-
   if (!profileUser) {
     return (
       <div className="flex flex-row ml-64 min-h-screen">
@@ -352,7 +350,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
       <div className="font-sans flex flex-col pb-2 gap-8 sm:p-20 w-full ">
         <div>
           <div className="hero w-full">
-            <div className="hero-content w-full flex-col bg-base-300 rounded-2xl">
+            <div className="hero-content w-full flex-col bg-base-300 rounded-2xl ">
               {/* Cover Image */}
               <div
                 className="w-full h-80 bg-cover object-cover bg-center relative rounded-xl"
@@ -377,7 +375,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 )}
               </div>
 
-              <div className="flex flex-col w-full gap-4 ">
+              <div className="flex flex-col w-full gap-4 sm:px-6 ">
                 <div className="flex flex-row">
                   <div className="avatar">
                     <div className="w-22 rounded-full absolute -top-18 ">
@@ -433,11 +431,13 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                     )}
                     {isAuthenticated && !editToggle && !itsOwnProfile && (
                       <button
-                        onClick={() =>
-                          followingUserIdList.includes(id)
-                            ? followUser(firestoreUser!.uid, id)
-                            : unfollowUser(firestoreUser!.uid, id)
-                        }
+                        onClick={() => {
+                          if (firestoreUser?.uid) {
+                            following.includes(id)
+                              ? unfollowUser(firestoreUser.uid, id)
+                              : followUser(firestoreUser.uid, id);
+                          }
+                        }}
                         className="btn btn-circle ml-auto mr-12 bg-transparent border-none"
                       >
                         <svg
@@ -761,7 +761,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1">
                         {posts.map((post) => (
                           <div key={post.postId}>
-                            <PostCard post={post} location="profile"/>
+                            <PostCard post={post} location="profile" />
                           </div>
                         ))}
                       </div>
