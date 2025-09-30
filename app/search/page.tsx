@@ -62,7 +62,7 @@ const SearchPage = () => {
   return (
     <div className="flex flex-row sm:ml-20 min-h-screen ">
       <Navbar />
-      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen ml-2 pt-20 w-full xl:ml-43">
+      <div className="font-sans flex flex-col items-center justify-items-center min-h-screen mt-10 w-full xl:ml-36">
         <h1 className="pb-15 xl:text-lg">SEARCH PAGE</h1>
         <label className="input xl:input-lg xl:w-120">
           <svg

@@ -349,7 +349,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
       <Navbar />
       <div className="font-sans flex flex-col pb-2 gap-8 sm:p-20 w-full ">
         <div>
-          <div className="hero w-full">
+          <div className="hero w-full sm:min-w-120 md:min-w-160 lg:min-w-200 xl:min-w-240 2xl:min-w-300">
             <div className="hero-content w-full flex-col bg-base-300 rounded-2xl ">
               {/* Cover Image */}
               <div
@@ -361,7 +361,7 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 }}
               >
                 {editToggle && itsOwnProfile && (
-                  <div className="absolute inset-0 bg-black  flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black opacity-75 flex items-center justify-center">
                     <div className="text-center">
                       <p className="text-lg font-semibold mb-2 text-white">
                         Cover Image
@@ -375,10 +375,10 @@ const UsersProfile = ({ params }: ProfilePageProps) => {
                 )}
               </div>
 
-              <div className="flex flex-col w-full gap-4 sm:px-6 ">
+              <div className="flex flex-col w-full gap-4 sm:px-6">
                 <div className="flex flex-row">
                   <div className="avatar">
-                    <div className="w-22 rounded-full absolute -top-18 ">
+                    <div className="w-22 rounded-full absolute -top-18">
                       <Image
                         src={
                           profileUser.photoURL ||

@@ -135,7 +135,7 @@ const DisplayPost = ({ forumId, location }: DisplayPostProps) => {
   return (
     <div className="font-sans flex flex-col items-center min-screen w-full gap-10 pb-20">
       {location === "home" && (
-        <div className="join join-horizontal  ">
+        <div className="join join-horizontal pt-8 ">
           <button
             className={`btn join-item xl:btn-lg ${
               displayType === "general"
